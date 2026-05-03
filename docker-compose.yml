@@ -1,0 +1,67 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: arcade_postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
+      POSTGRES_DB: ${POSTGRES_DB:-arcade_trade}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build:
+      context: ./arcade-api
+      dockerfile: Dockerfile
+    container_name: arcade_api
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      PORT: 3001
+      DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-arcade_trade}?schema=public
+      JWT_ACCESS_SECRET: ${JWT_ACCESS_SECRET:?Set JWT_ACCESS_SECRET in .env}
+      JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET:?Set JWT_REFRESH_SECRET in .env}
+      CORS_ORIGIN: ${CORS_ORIGIN:-http://localhost:3000}
+      API_BASE_URL: ${API_BASE_URL:-http://localhost:3001/api/v1}
+      ALLOWED_DOMAINS: ${ALLOWED_DOMAINS:-localhost}
+      STORAGE_DRIVER: local
+      UPLOAD_DIR: ./uploads
+      SITE_URL: ${SITE_URL:-http://localhost:3000}
+    ports:
+      - "3001:3001"
+    volumes:
+      - uploads_data:/app/uploads
+    restart: unless-stopped
+
+  web:
+    build:
+      context: ./arcade-web
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: ${API_BASE_URL:-http://localhost:3001/api/v1}
+        NEXT_PUBLIC_WS_URL: ${WS_URL:-http://localhost:3001}
+    container_name: arcade_web
+    depends_on:
+      - api
+    environment:
+      NEXT_PUBLIC_API_URL: ${API_BASE_URL:-http://localhost:3001/api/v1}
+      NEXT_PUBLIC_WS_URL: ${WS_URL:-http://localhost:3001}
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  uploads_data:

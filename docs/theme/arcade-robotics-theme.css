@@ -1,0 +1,141 @@
+/*
+|--------------------------------------------------------------------------
+| Arcade Project - Robotics Tech Theme
+| Derived from BeRobotics color scheme & Montoya layout
+|--------------------------------------------------------------------------
+*/
+
+:root {
+    /* Color Palette */
+    --tech-blue-primary: #1c91f2;
+    --tech-blue-dark: #007fe8;
+    --tech-blue-deep: #005bb7;
+    --tech-bg-light: #f2f3f4;
+    --tech-bg-muted: #e5f6ff;
+    --tech-bg-dark: #46525e;
+    --tech-bg-black: #111821;
+    --tech-text-main: #2f353b;
+    --tech-text-muted: #7b8994;
+    --tech-white: #ffffff;
+    
+    /* Gradients */
+    --tech-gradient-hero: linear-gradient(135deg, #1c91f2 0%, #005bb7 100%);
+    --tech-gradient-dark: linear-gradient(180deg, #46525e 0%, #111821 100%);
+}
+
+/* Layout Mapping for Montoya Structure */
+
+/* Header Override */
+#Top_bar {
+    background-color: var(--tech-white) !important;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+
+#Top_bar .menu > li > a span {
+    color: var(--tech-text-main) !important;
+    font-weight: 500;
+}
+
+#Top_bar .menu > li.current-menu-item > a span,
+#Top_bar .menu > li > a:hover span {
+    color: var(--tech-blue-primary) !important;
+}
+
+/* Hero Section (The "Ready for those who were prepared!" part) */
+.mfn-main-slider, 
+#mfn-rev-slider {
+    background: var(--tech-gradient-hero) !important;
+}
+
+/* Buttons */
+.action_button, 
+.button, 
+input[type="submit"] {
+    background-color: var(--tech-blue-primary) !important;
+    color: var(--tech-white) !important;
+    border-radius: 4px !important;
+    text-transform: uppercase !important;
+    letter-spacing: 1px !important;
+    transition: all 0.3s ease !important;
+    box-shadow: 0 4px 15px rgba(28, 145, 242, 0.3) !important;
+}
+
+.action_button:hover, 
+.button:hover {
+    background-color: var(--tech-blue-dark) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(28, 145, 242, 0.4) !important;
+}
+
+/* Feature Icons (The 4 green boxes in Montoya) */
+/* Replacing the "Montoya Green" squares with Tech Blue/Gray */
+.mcb-wrap.one-fourth .column_attr,
+.mcb-wrap.one-third .column_attr {
+    border-radius: 8px !important;
+    transition: transform 0.3s ease !important;
+}
+
+.mcb-section .column_attr h2, 
+.mcb-section .column_attr h3, 
+.mcb-section .column_attr h4 {
+    color: var(--tech-bg-dark);
+}
+
+/* Slot Games Section (The dark section) */
+.section.dark, 
+#slot-games-section {
+    background: var(--tech-gradient-dark) !important;
+    color: var(--tech-white) !important;
+}
+
+.section.dark h2, 
+.section.dark h3, 
+.section.dark p {
+    color: var(--tech-white) !important;
+}
+
+/* Advantage Boxes (The 4 big icons) */
+.advantage-box, 
+.mcb-wrap[style*="background-color"] {
+    background-color: var(--tech-bg-muted) !important; /* Replacing the green boxes with light blue */
+}
+
+.advantage-box:hover,
+div[style*="background-color:#8cc63f"]:hover {
+    background-color: var(--tech-blue-primary) !important;
+    color: var(--tech-white) !important;
+}
+
+/* Footer */
+#Footer {
+    background-color: var(--tech-bg-black) !important;
+    color: var(--tech-text-muted) !important;
+}
+
+#Footer .copyright {
+    border-top: 1px solid rgba(255,255,255,0.05) !important;
+}
+
+/* Newsletter Section */
+#newsletter-section {
+    background-color: var(--tech-bg-dark) !important;
+}
+
+#newsletter-section input[type="email"] {
+    border-radius: 4px 0 0 4px !important;
+}
+
+#newsletter-section input[type="submit"],
+#newsletter-section .button {
+    border-radius: 0 4px 4px 0 !important;
+}
+
+/* Typography Overrides */
+body {
+    background-color: var(--tech-bg-light) !important;
+    font-family: 'Poppins', 'Nunito Sans', sans-serif !important;
+}
+
+.themecolor {
+    color: var(--tech-blue-primary) !important;
+}
