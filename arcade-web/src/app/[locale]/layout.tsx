@@ -32,7 +32,7 @@ export default async function LocaleLayout({
   // Detect admin route
   const headersList = await headers();
   const pathname = headersList.get('x-next-url') || headersList.get('x-invoke-path') || headersList.get('referer') || '';
-  const isAdmin = pathname.includes('/admin');
+  const isAdmin = pathname.includes('/admin') && !pathname.includes('/admin/login');
 
   // Fetch Public Settings
   let globalOps: any = {};
