@@ -2,24 +2,37 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/a
 
 export async function fetchAPI(endpoint: string, options: RequestInit = {}) {
   const url = `${API_BASE_URL}${endpoint}`;
-  const response = await fetch(url, {
-    ...options,
-    headers: {
-      'Content-Type': 'application/json',
-      ...options.headers,
-    },
-  });
+  
+  // Use AbortSignal to timeout requests after 5 seconds to prevent build hanging
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 5000);
 
-  if (!response.ok) {
-    if (response.status === 404) {
-      return null;
+  try {
+    const response = await fetch(url, {
+      ...options,
+      signal: controller.signal,
+      headers: {
+        'Content-Type': 'application/json',
+        ...options.headers,
+      },
+    });
+    clearTimeout(timeoutId);
+
+    if (!response.ok) {
+      if (response.status === 404) {
+        return null;
+      }
+      const errorData = await response.json().catch(() => ({}));
+      console.error(`fetchAPI ERROR: URL: ${url} | STATUS: ${response.status} | ERROR:`, errorData);
+      throw new Error(errorData.message || `API request failed: ${url} with status ${response.status}`);
     }
-    const errorData = await response.json().catch(() => ({}));
-    console.error(`fetchAPI ERROR: URL: ${url} | STATUS: ${response.status} | ERROR:`, errorData);
-    throw new Error(errorData.message || `API request failed: ${url} with status ${response.status}`);
-  }
 
-  return response.json();
+    return await response.json();
+  } catch (error: any) {
+    clearTimeout(timeoutId);
+    console.error(`fetchAPI FATAL: URL: ${url} | ERROR:`, error.message);
+    throw error;
+  }
 }
 
 // Product API layer
