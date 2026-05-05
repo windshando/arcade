@@ -8,6 +8,12 @@ const intlMiddleware = createMiddleware(routing);
 export default function middleware(request: NextRequest) {
   // Fix Next.js proxy port issue on Railway (prevents redirecting to :8080)
   request.nextUrl.port = '';
+  
+  const host = request.headers.get('x-forwarded-host') || request.headers.get('host') || '';
+  const cleanHost = host.split(':')[0]; // Remove port
+  request.headers.set('x-forwarded-host', cleanHost);
+  request.headers.set('host', cleanHost);
+  request.headers.set('x-forwarded-port', '443');
 
   // Check if this is an admin route
   const pathname = request.nextUrl.pathname;
