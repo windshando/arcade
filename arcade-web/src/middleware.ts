@@ -6,6 +6,9 @@ import type { NextRequest } from 'next/server';
 const intlMiddleware = createMiddleware(routing);
 
 export default function middleware(request: NextRequest) {
+  // Fix Next.js proxy port issue on Railway (prevents redirecting to :8080)
+  request.nextUrl.port = '';
+
   // Check if this is an admin route
   const pathname = request.nextUrl.pathname;
   const isAdminRoute = pathname.includes('/admin') && !pathname.includes('/admin/login');
