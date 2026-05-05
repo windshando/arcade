@@ -38,8 +38,13 @@ export async function loginAdmin(prevState: any, formData: FormData) {
     }
     
     return { error: 'No token received.' };
-  } catch (error) {
-    return { error: 'Failed to connect to authentication server.' };
+  } catch (error: any) {
+    console.error(`LOGIN FETCH ERROR details:`, {
+      url: `${API_BASE_URL}/auth/login`,
+      errorMessage: error.message,
+      errorCause: error.cause,
+    });
+    return { error: `Failed to connect: ${error.message} (${API_BASE_URL})` };
   }
 }
 
