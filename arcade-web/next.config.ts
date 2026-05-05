@@ -16,7 +16,6 @@ try {
 } catch {}
 
 const nextConfig: NextConfig = {
-  output: 'standalone',
   experimental: {
     serverActions: {
       bodySizeLimit: '50mb',
