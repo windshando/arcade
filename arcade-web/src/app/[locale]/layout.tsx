@@ -37,7 +37,13 @@ export default async function LocaleLayout({
   // Fetch Public Settings
   let globalOps: any = {};
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api/v1'}/settings/public`, { cache: 'no-store' });
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 5000);
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api/v1'}/settings/public`, { 
+      cache: 'no-store',
+      signal: controller.signal
+    });
+    clearTimeout(timeoutId);
     if (res.ok) {
       const data = await res.json();
       globalOps = data.global_options || {};
