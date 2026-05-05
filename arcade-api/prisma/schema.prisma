@@ -1,0 +1,771 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum AdminRole {
+  SUPER_ADMIN
+  ADMIN
+  SALES
+  EDITOR
+  SUPPORT
+  VIEWER
+}
+
+enum LeadStatus {
+  NEW
+  CONTACTED
+  QUALIFIED
+  QUOTED
+  NEGOTIATING
+  SAMPLE_SENT
+  WON
+  LOST
+  INVALID
+}
+
+enum InquiryType {
+  GENERAL
+  PRODUCT
+  QUOTE
+  CUSTOMIZATION
+  WARRANTY
+  SUPPORT
+}
+
+enum ContactMethod {
+  EMAIL
+  PHONE
+  WHATSAPP
+  WECHAT
+  FORM
+  OTHER
+}
+
+enum ContentStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum LocaleCode {
+  EN
+  ZH_CN
+  JA
+  AR
+}
+
+model AdminUser {
+  id           String    @id @default(cuid())
+  email        String    @unique
+  passwordHash String
+  role         AdminRole
+  displayName  String
+  isActive     Boolean   @default(true)
+  lastLoginAt  DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  leadNotes      LeadNote[]
+  leadActivities LeadActivity[]
+  auditLogs      AuditLog[]
+  mediaFiles     MediaFile[]
+  chatMessages   ChatMessage[]
+}
+
+model Locale {
+  id        String     @id @default(cuid())
+  code      LocaleCode @unique
+  label     String
+  isDefault Boolean    @default(false)
+  isEnabled Boolean    @default(true)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+}
+
+model LeadSource {
+  id          String   @id @default(cuid())
+  key         String   @unique
+  label       String
+  description String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  inquiries Inquiry[]
+  customers Customer[]
+}
+
+model Customer {
+  id                     String         @id @default(cuid())
+  companyName            String?
+  website                String?
+  countryCode            String?
+  region                 String?
+  city                   String?
+  addressLine1           String?
+  addressLine2           String?
+  postalCode             String?
+  preferredLocale        LocaleCode?
+  preferredContactMethod ContactMethod?
+  notes                  String?
+  sourceId               String?
+  createdAt              DateTime       @default(now())
+  updatedAt              DateTime       @updatedAt
+
+  source         LeadSource?    @relation(fields: [sourceId], references: [id])
+  contacts       Contact[]
+  inquiries      Inquiry[]
+  leadActivities LeadActivity[]
+}
+
+model Contact {
+  id              String         @id @default(cuid())
+  customerId      String
+  firstName       String?
+  lastName        String?
+  fullName        String?
+  email           String?
+  phone           String?
+  whatsapp        String?
+  wechat          String?
+  jobTitle        String?
+  isPrimary       Boolean        @default(false)
+  preferredMethod ContactMethod?
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+
+  customer Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+
+  @@index([customerId])
+}
+
+model Inquiry {
+  id                     String         @id @default(cuid())
+  inquiryType            InquiryType
+  status                 LeadStatus     @default(NEW)
+  customerId             String?
+  sourceId               String?
+  assignedToAdminId      String?
+  productId              String?
+  subject                String?
+  message                String?
+  requestedQuantity      Int?
+  budgetRange            String?
+  shippingDestination    String?
+  requestedIncoterm      String?
+  preferredContactMethod ContactMethod?
+  contactName            String?
+  contactEmail           String?
+  contactPhone           String?
+  contactWhatsapp        String?
+  contactWechat          String?
+  companyName            String?
+  countryCode            String?
+  locale                 LocaleCode?
+  referrerUrl            String?
+  landingPageUrl         String?
+  utmSource              String?
+  utmMedium              String?
+  utmCampaign            String?
+  utmTerm                String?
+  utmContent             String?
+  ipAddress              String?
+  userAgent              String?
+  sessionDuration        Int?
+  pageViews              Int?
+  tags                   String[]       @default([])
+  createdAt              DateTime       @default(now())
+  updatedAt              DateTime       @updatedAt
+
+  customer     Customer?      @relation(fields: [customerId], references: [id])
+  source       LeadSource?    @relation(fields: [sourceId], references: [id])
+  product      Product?       @relation(fields: [productId], references: [id])
+  notes        LeadNote[]
+  activities   LeadActivity[]
+  chatSessions ChatSession[]
+
+  @@index([status])
+  @@index([customerId])
+  @@index([productId])
+  @@index([sourceId])
+}
+
+model LeadNote {
+  id          String   @id @default(cuid())
+  inquiryId   String
+  adminUserId String
+  body        String
+  createdAt   DateTime @default(now())
+
+  inquiry   Inquiry   @relation(fields: [inquiryId], references: [id], onDelete: Cascade)
+  adminUser AdminUser @relation(fields: [adminUserId], references: [id])
+
+  @@index([inquiryId])
+}
+
+model LeadActivity {
+  id           String   @id @default(cuid())
+  inquiryId    String?
+  customerId   String?
+  adminUserId  String?
+  activityType String
+  summary      String
+  metadataJson Json?
+  createdAt    DateTime @default(now())
+
+  inquiry   Inquiry?   @relation(fields: [inquiryId], references: [id], onDelete: Cascade)
+  customer  Customer?  @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  adminUser AdminUser? @relation(fields: [adminUserId], references: [id])
+
+  @@index([inquiryId])
+  @@index([customerId])
+}
+
+model ProductCategory {
+  id           String   @id @default(cuid())
+  parentId     String?
+  slug         String   @unique
+  sortOrder    Int      @default(0)
+  isActive     Boolean  @default(true)
+  coverMediaId String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  parent       ProductCategory?             @relation("CategoryTree", fields: [parentId], references: [id])
+  children     ProductCategory[]            @relation("CategoryTree")
+  translations ProductCategoryTranslation[]
+  products     Product[]
+  promotions   Promotion[]
+  coverMedia   MediaFile?                   @relation("CategoryCover", fields: [coverMediaId], references: [id])
+}
+
+model ProductCategoryTranslation {
+  id             String     @id @default(cuid())
+  categoryId     String
+  locale         LocaleCode
+  name           String
+  description    String?
+  seoTitle       String?
+  seoDescription String?
+
+  category ProductCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@unique([categoryId, locale])
+}
+
+model Product {
+  id                   String        @id @default(cuid())
+  categoryId           String
+  sku                  String?       @unique
+  slug                 String        @unique
+  status               ContentStatus @default(DRAFT)
+  coverMediaId         String?
+  brochureMediaId      String?
+  youtubeUrl           String?
+  isFeatured           Boolean       @default(false)
+  sortOrder            Int           @default(0)
+  voltage              String?
+  powerConsumption     String?
+  dimensions           String?
+  weight               String?
+  screenSize           String?
+  playerCount          String?
+  moq                  Int?
+  leadTimeDays         Int?
+  warrantyMonths       Int?
+  targetVenue          String?
+  customizationEnabled Boolean       @default(false)
+  basePrice            Float?
+  baseCurrency         String?       @default("USD")
+  createdAt            DateTime      @default(now())
+  updatedAt            DateTime      @updatedAt
+
+  category             ProductCategory              @relation(fields: [categoryId], references: [id])
+  translations         ProductTranslation[]
+  specs                ProductSpec[]
+  mediaItems           ProductMedia[]
+  customizationOptions ProductCustomizationOption[]
+  inquiries            Inquiry[]
+  promotions           Promotion[]
+
+  @@index([categoryId])
+  @@index([status])
+}
+
+model ProductTranslation {
+  id               String     @id @default(cuid())
+  productId        String
+  locale           LocaleCode
+  name             String
+  shortDescription String?
+  description      String?
+  seoTitle         String?
+  seoDescription   String?
+
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([productId, locale])
+}
+
+model ProductSpec {
+  id        String      @id @default(cuid())
+  productId String
+  sortOrder Int         @default(0)
+  specKey   String
+  specValue String
+  locale    LocaleCode?
+
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([productId])
+}
+
+model ProductCustomizationOption {
+  id          String      @id @default(cuid())
+  productId   String
+  sortOrder   Int         @default(0)
+  optionKey   String
+  optionValue String
+  locale      LocaleCode?
+
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([productId])
+}
+
+model MediaFile {
+  id           String   @id @default(cuid())
+  storageKey   String   @unique
+  originalName String
+  mimeType     String
+  fileSize     Int
+  width        Int?
+  height       Int?
+  altText      String?
+  uploadedById String?
+  createdAt    DateTime @default(now())
+
+  uploadedBy      AdminUser?       @relation(fields: [uploadedById], references: [id])
+  productLinks    ProductMedia[]
+  jobApplications JobApplication[] @relation("JobResume")
+  desktopSlides   HeroSlide[]      @relation("DesktopMedia")
+  mobileSlides    HeroSlide[]      @relation("MobileMedia")
+  categoryCovers  ProductCategory[] @relation("CategoryCover")
+}
+
+model ProductMedia {
+  id          String  @id @default(cuid())
+  productId   String
+  mediaFileId String
+  sortOrder   Int     @default(0)
+  isPrimary   Boolean @default(false)
+
+  product   Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
+  mediaFile MediaFile @relation(fields: [mediaFileId], references: [id], onDelete: Cascade)
+
+  @@index([productId])
+}
+
+model BlogCategory {
+  id        String   @id @default(cuid())
+  slug      String   @unique
+  sortOrder Int      @default(0)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  translations BlogCategoryTranslation[]
+  posts        BlogPost[]
+}
+
+model BlogCategoryTranslation {
+  id             String     @id @default(cuid())
+  blogCategoryId String
+  locale         LocaleCode
+  name           String
+  description    String?
+
+  blogCategory BlogCategory @relation(fields: [blogCategoryId], references: [id], onDelete: Cascade)
+
+  @@unique([blogCategoryId, locale])
+}
+
+model BlogPost {
+  id           String        @id @default(cuid())
+  categoryId   String?
+  slug         String        @unique
+  status       ContentStatus @default(DRAFT)
+  coverMediaId String?
+  publishedAt  DateTime?
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  category     BlogCategory?         @relation(fields: [categoryId], references: [id])
+  translations BlogPostTranslation[]
+
+  @@index([status])
+  @@index([publishedAt])
+}
+
+model BlogPostTranslation {
+  id             String     @id @default(cuid())
+  postId         String
+  locale         LocaleCode
+  title          String
+  excerpt        String?
+  content        String
+  seoTitle       String?
+  seoDescription String?
+
+  post BlogPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@unique([postId, locale])
+}
+
+model StaticPage {
+  id        String        @id @default(cuid())
+  pageKey   String        @unique
+  status    ContentStatus @default(DRAFT)
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  translations StaticPageTranslation[]
+}
+
+model StaticPageTranslation {
+  id             String     @id @default(cuid())
+  pageId         String
+  locale         LocaleCode
+  title          String
+  content        String
+  seoTitle       String?
+  seoDescription String?
+
+  page StaticPage @relation(fields: [pageId], references: [id], onDelete: Cascade)
+
+  @@unique([pageId, locale])
+}
+
+model SiteSetting {
+  id           String   @id @default(cuid())
+  settingKey   String   @unique
+  settingValue Json
+  updatedAt    DateTime @updatedAt
+}
+
+model AuditLog {
+  id           String   @id @default(cuid())
+  adminUserId  String?
+  action       String
+  resourceType String
+  resourceId   String?
+  metadataJson Json?
+  createdAt    DateTime @default(now())
+
+  adminUser AdminUser? @relation(fields: [adminUserId], references: [id])
+
+  @@index([resourceType, resourceId])
+}
+
+model ChatSession {
+  id          String   @id @default(cuid())
+  ipAddress   String?
+  deviceInfo  String?
+  email       String?
+  visitorName String?
+  status      String   @default("ACTIVE") // ACTIVE, CLOSED
+  inquiryId   String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  inquiry  Inquiry?      @relation(fields: [inquiryId], references: [id])
+  messages ChatMessage[]
+
+  @@index([inquiryId])
+}
+
+model ChatMessage {
+  id         String   @id @default(cuid())
+  sessionId  String
+  senderType String // VISITOR, ADMIN, SYSTEM
+  senderId   String?
+  senderName String?
+  content    String
+  createdAt  DateTime @default(now())
+
+  session   ChatSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  adminUser AdminUser?  @relation(fields: [senderId], references: [id], onDelete: SetNull)
+
+  @@index([sessionId])
+  @@index([senderId])
+}
+
+model FaqCategory {
+  id        String   @id @default(cuid())
+  slug      String   @unique
+  sortOrder Int      @default(0)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  translations FaqCategoryTranslation[]
+  faqs         Faq[]
+}
+
+model FaqCategoryTranslation {
+  id            String     @id @default(cuid())
+  faqCategoryId String
+  locale        LocaleCode
+  name          String
+
+  faqCategory FaqCategory @relation(fields: [faqCategoryId], references: [id], onDelete: Cascade)
+
+  @@unique([faqCategoryId, locale])
+}
+
+model Faq {
+  id         String        @id @default(cuid())
+  categoryId String
+  status     ContentStatus @default(DRAFT)
+  sortOrder  Int           @default(0)
+  upvotes    Int           @default(0)
+  downvotes  Int           @default(0)
+  viewCount  Int           @default(0)
+  createdAt  DateTime      @default(now())
+  updatedAt  DateTime      @updatedAt
+
+  category     FaqCategory      @relation(fields: [categoryId], references: [id])
+  translations FaqTranslation[]
+
+  @@index([status])
+}
+
+model FaqTranslation {
+  id       String     @id @default(cuid())
+  faqId    String
+  locale   LocaleCode
+  question String
+  answer   String
+
+  faq Faq @relation(fields: [faqId], references: [id], onDelete: Cascade)
+
+  @@unique([faqId, locale])
+}
+
+model Subscriber {
+  id               String   @id @default(cuid())
+  email            String   @unique
+  topics           String[] // e.g. ["news", "promotions", "new_products", "ALL"]
+  isActive         Boolean  @default(true)
+  unsubscribeToken String   @unique @default(cuid())
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
+
+model EmailCampaign {
+  id           String    @id @default(cuid())
+  subject      String
+  bodyHtml     String
+  targetTopics String[]
+  status       String    @default("DRAFT") // DRAFT, SCHEDULED, SENDING, COMPLETED, FAILED
+  scheduledFor DateTime?
+  sentAt       DateTime?
+  totalTargets Int       @default(0)
+  totalSent    Int       @default(0)
+  totalFailed  Int       @default(0)
+  totalOpened  Int       @default(0)
+  totalClicked Int       @default(0)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+}
+
+model Promotion {
+  id               String        @id @default(cuid())
+  slug             String        @unique
+  title            String
+  description      String?
+  bodyHtml         String?
+  coverMediaId     String?
+  status           ContentStatus @default(DRAFT)
+  startDate        DateTime?
+  endDate          DateTime?
+  viewCount        Int           @default(0)
+  targetProductId  String?
+  targetCategoryId String?
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+
+  targetProduct  Product?         @relation(fields: [targetProductId], references: [id])
+  targetCategory ProductCategory? @relation(fields: [targetCategoryId], references: [id])
+}
+
+model JobApplication {
+  id            String   @id @default(cuid())
+  firstName     String
+  lastName      String
+  email         String
+  phone         String?
+  position      String
+  resumeMediaId String?
+  message       String?
+  status        String   @default("NEW") // NEW, REVIEWING, INTERVIEW, REJECTED, HIRED
+  ipAddress     String?
+  userAgent     String?
+  sessionDuration Int?
+  pageViews     Int?
+  jobPostingId  String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  resumeMedia MediaFile?  @relation("JobResume", fields: [resumeMediaId], references: [id])
+  jobPosting  JobPosting? @relation(fields: [jobPostingId], references: [id], onDelete: SetNull)
+}
+
+model FranchiseApplication {
+  id               String   @id @default(cuid())
+  firstName        String
+  lastName         String
+  email            String
+  phone            String
+  companyName      String?
+  countryCode      String?
+  region           String?
+  investmentBudget String?
+  message          String?
+  status           String   @default("NEW") // NEW, CONTACTED, NEGOTIATING, APPROVED, REJECTED
+  ipAddress        String?
+  userAgent        String?
+  sessionDuration  Int?
+  pageViews        Int?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
+
+model JobPosting {
+  id          String        @id @default(cuid())
+  status      ContentStatus @default(DRAFT)
+  department  String?
+  location    String?
+  type        String? // FULL_TIME, PART_TIME, CONTRACT
+  salaryRange String?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  translations JobPostingTranslation[]
+  applications JobApplication[]
+}
+
+model JobPostingTranslation {
+  id           String     @id @default(cuid())
+  jobPostingId String
+  locale       LocaleCode
+  title        String
+  description  String     @db.Text
+  requirements String?    @db.Text
+
+  jobPosting JobPosting @relation(fields: [jobPostingId], references: [id], onDelete: Cascade)
+
+  @@unique([jobPostingId, locale])
+}
+
+model HeroSlide {
+  id               String        @id @default(cuid())
+  status           ContentStatus @default(DRAFT)
+  desktopMediaId   String?
+  mobileMediaId    String?
+  url              String?
+  layoutStyle      String        @default("LEFT_TEXT") // LEFT_TEXT, RIGHT_TEXT, CENTER_BOTTOM, LEFT_IMAGE
+  buttonStyle      String        @default("LIGHT")     // LIGHT, DARK
+  sortOrder        Int           @default(0)
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+
+  desktopMedia     MediaFile?    @relation("DesktopMedia", fields: [desktopMediaId], references: [id])
+  mobileMedia      MediaFile?    @relation("MobileMedia", fields: [mobileMediaId], references: [id])
+  translations     HeroSlideTranslation[]
+}
+
+model HeroSlideTranslation {
+  id               String     @id @default(cuid())
+  slideId          String
+  locale           LocaleCode
+  title            String?
+  subtitle         String?
+  ctaText          String?
+
+  slide HeroSlide @relation(fields: [slideId], references: [id], onDelete: Cascade)
+
+  @@unique([slideId, locale])
+}
+
+model Advantage {
+  id          String        @id @default(cuid())
+  status      ContentStatus @default(DRAFT)
+  iconName    String
+  sortOrder   Int           @default(0)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  translations AdvantageTranslation[]
+}
+
+model AdvantageTranslation {
+  id          String     @id @default(cuid())
+  advantageId String
+  locale      LocaleCode
+  title       String
+  description String
+
+  advantage Advantage @relation(fields: [advantageId], references: [id], onDelete: Cascade)
+
+  @@unique([advantageId, locale])
+}
+
+
+model NavigationMenu {
+  id          String   @id @default(cuid())
+  key         String   @unique
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  items       NavigationItem[]
+}
+
+model NavigationItem {
+  id           String   @id @default(cuid())
+  menuId       String
+  parentId     String?
+  url          String
+  sortOrder    Int      @default(0)
+  isExternal   Boolean  @default(false)
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  menu         NavigationMenu   @relation(fields: [menuId], references: [id], onDelete: Cascade)
+  parent       NavigationItem?  @relation("ParentChild", fields: [parentId], references: [id], onDelete: SetNull)
+  children     NavigationItem[] @relation("ParentChild")
+  translations NavigationItemTranslation[]
+
+  @@index([menuId])
+}
+
+model NavigationItemTranslation {
+  id        String     @id @default(cuid())
+  itemId    String
+  locale    LocaleCode
+  label     String
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  item      NavigationItem @relation(fields: [itemId], references: [id], onDelete: Cascade)
+
+  @@unique([itemId, locale])
+}
+

@@ -1,0 +1,194 @@
+@import "tailwindcss";
+
+/* Theme Definitions */
+:root,
+:root[data-theme='arcade'] {
+  --theme-font: 'Poppins', 'Inter', sans-serif;
+  --background: #f2f3f4;
+  --foreground: #2f353b;
+  --primary: #1c91f2;
+  --primary-hover: #007fe8;
+  --secondary: #46525e;
+  --accent: #00cec9;
+  --success: #00b894;
+  --danger: #d63031;
+  --card-bg: #ffffff;
+  --card-border: #dfe6e9;
+  --radius: 0.75rem;
+  --glass-bg: rgba(229, 246, 255, 0.7);
+  --glass-border: rgba(28, 145, 242, 0.15);
+}
+
+:root[data-theme='minimalist'] {
+  --background: #f8fafc;
+  --foreground: #0f172a;
+  --primary: #1e293b;
+  --primary-hover: #334155;
+  --secondary: #64748b;
+  --accent: #0ea5e9;
+  --card-bg: #ffffff;
+  --card-border: #f1f5f9;
+  --radius: 0.5rem;
+  --glass-bg: #ffffff;
+  --glass-border: #e2e8f0;
+}
+
+:root[data-theme='dark-night'] {
+  --background: #020617;
+  --foreground: #f8fafc;
+  --primary: #8b5cf6;
+  --primary-hover: #7c3aed;
+  --secondary: #d946ef;
+  --accent: #f43f5e;
+  --card-bg: #0f172a;
+  --card-border: #1e293b;
+  --radius: 1.5rem;
+  --glass-bg: rgba(15, 23, 42, 0.8);
+  --glass-border: rgba(255, 255, 255, 0.05);
+}
+
+:root[data-theme='retro-arcade'] {
+  --theme-font: 'VT323', monospace;
+  --background: #0B0C10;
+  --foreground: #E2E8F0;
+  --primary: #FFD700;
+  --primary-hover: #FFDF33;
+  --secondary: #00FFFF;
+  --accent: #FF00FF;
+  --card-bg: #111218;
+  --card-border: rgba(255, 215, 0, 0.4);
+  --radius: 0.5rem;
+  --glass-bg: rgba(17, 18, 24, 0.8);
+  --glass-border: rgba(0, 255, 255, 0.5);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    --background: #0f172a;
+    --foreground: #f8fafc;
+    --primary: #60a5fa;
+    --primary-hover: #93c5fd;
+    --secondary: #a78bfa;
+    --card-bg: #1e293b;
+    --card-border: #334155;
+    --glass-bg: rgba(30, 41, 59, 0.7);
+    --glass-border: rgba(255, 255, 255, 0.05);
+  }
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-secondary: var(--secondary);
+  --color-accent: var(--accent);
+  --color-card-bg: var(--card-bg);
+  --color-card-border: var(--card-border);
+  --font-sans: var(--theme-font, 'Poppins', 'Inter', sans-serif);
+  --font-mono: 'JetBrains Mono', monospace;
+  --radius-xl: var(--radius);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  transition: background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1), color 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  line-height: 1.6;
+  position: relative;
+}
+
+/* CRT Scanlines for retro-arcade theme */
+:root[data-theme='retro-arcade'] body::after {
+  content: "";
+  position: fixed;
+  top: 0; left: 0; width: 100vw; height: 100vh;
+  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%), radial-gradient(circle, rgba(0,0,0,0) 60%, rgba(0,0,0,0.4) 100%);
+  background-size: 100% 4px, 100% 100%;
+  z-index: 9999;
+  pointer-events: none;
+}
+
+/* Disable CRT scanlines on admin pages */
+body:has([data-admin])::after {
+  display: none !important;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulseGlow {
+  0% { box-shadow: 0 0 5px var(--primary), inset 0 0 5px var(--primary); }
+  50% { box-shadow: 0 0 20px var(--primary), inset 0 0 10px var(--primary); }
+  100% { box-shadow: 0 0 5px var(--primary), inset 0 0 5px var(--primary); }
+}
+
+@keyframes marqueeBorder {
+  0% { border-color: var(--primary); box-shadow: 0 0 10px var(--primary); }
+  33% { border-color: var(--secondary); box-shadow: 0 0 10px var(--secondary); }
+  66% { border-color: var(--accent); box-shadow: 0 0 10px var(--accent); }
+  100% { border-color: var(--primary); box-shadow: 0 0 10px var(--primary); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.4s ease-out forwards;
+}
+
+/* Component Styles */
+.glass-panel {
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius);
+}
+
+/* Card */
+.card-hover {
+  transition: all 0.2s ease-in-out;
+}
+.card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+}
+
+:root[data-theme='retro-arcade'] .card-hover:hover {
+  animation: marqueeBorder 1.5s linear infinite;
+  transform: translateY(-4px);
+}
+
+.btn-primary {
+  background-color: var(--primary);
+  color: white;
+  padding: 0.5rem 1.5rem;
+  border-radius: 9999px;
+  font-weight: 500;
+  transition: all 0.2s;
+  box-shadow: 0 4px 14px 0 rgba(0, 0, 0, 0.1);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.btn-primary:hover {
+  background-color: var(--primary-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+:root[data-theme='retro-arcade'] .btn-primary {
+  border-radius: 4px;
+  color: #000;
+  font-weight: 800;
+  text-transform: uppercase;
+  animation: pulseGlow 2s infinite;
+  border: 2px solid #FFF;
+}
+:root[data-theme='retro-arcade'] .btn-primary:hover {
+  background-color: #FFF;
+  color: #000;
+  animation: pulseGlow 0.5s infinite;
+}
