@@ -42,7 +42,7 @@ export class AuthService {
       };
     } catch (error: any) {
       if (error instanceof UnauthorizedException) throw error;
-      throw new InternalServerErrorException(\`Backend Error: \${error.message}\`);
+      throw new InternalServerErrorException(`Backend Error: ${error.message}`);
     }
   }
 
