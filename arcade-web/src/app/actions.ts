@@ -21,8 +21,10 @@ export async function loginAdmin(prevState: any, formData: FormData) {
     });
 
     if (!res.ok) {
+      const errorText = await res.text();
+      console.error(`LOGIN HTTP ERROR: ${res.status} - ${errorText}`);
       if (res.status === 401) return { error: 'Invalid credentials.' };
-      return { error: 'Authentication failed.' };
+      return { error: `Authentication failed (Status ${res.status}): ${errorText}` };
     }
 
     const data = await res.json();
