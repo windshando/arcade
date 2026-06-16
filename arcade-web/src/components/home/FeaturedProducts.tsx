@@ -13,7 +13,7 @@ export default function FeaturedProducts({ products }: { products: any[] }) {
 
   return (
     <section className="py-24 relative bg-background">
-      <div className="container-page mb-16 text-center md:text-left flex flex-col md:flex-row justify-between items-end gap-6">
+      <div className="page-wrapper mb-16 text-center md:text-left flex flex-col md:flex-row justify-between items-end gap-6">
         <div className="max-w-2xl">
           <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight uppercase text-foreground mb-4">
             Flagship <span className="text-primary">Machines</span>
@@ -30,7 +30,7 @@ export default function FeaturedProducts({ products }: { products: any[] }) {
         </Link>
       </div>
 
-      <div className="container-page">
+      <div className="page-wrapper">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {featured.map((product, idx) => {
             const hasMedia = product.media && product.media.length > 0;

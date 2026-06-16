@@ -2,7 +2,7 @@ import { Link } from '@/i18n/routing';
 
 export default function NotFound() {
   return (
-    <div className="min-h-[70vh] flex flex-col items-center justify-center text-center px-4 container-page">
+    <div className="min-h-[70vh] flex flex-col items-center justify-center text-center px-4 page-wrapper">
       <div className="glass-panel p-12 md:p-20 rounded-3xl max-w-2xl w-full border border-card-border/50 shadow-2xl relative overflow-hidden">
         <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary to-transparent" />
         <h1 className="text-8xl md:text-9xl font-black text-transparent bg-clip-text bg-gradient-to-br from-primary to-danger mb-4 drop-shadow-sm">

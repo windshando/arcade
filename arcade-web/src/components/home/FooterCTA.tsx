@@ -16,7 +16,7 @@ export default function FooterCTA() {
         <div className="absolute bottom-0 right-1/4 translate-x-1/2 translate-y-1/2 w-[500px] h-[500px] bg-danger/10 rounded-full blur-[150px]" />
       </div>
 
-      <div className="container-page relative z-10 flex flex-col lg:flex-row items-center justify-between gap-16">
+      <div className="page-wrapper relative z-10 flex flex-col lg:flex-row items-center justify-between gap-16">
         
         {/* Left Side: Copy */}
         <div className="max-w-3xl text-center lg:text-left">

@@ -9,7 +9,7 @@ export default function AdvantageGrid({ advantages }: { advantages: any[] }) {
       {/* High-Tech Background Glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-[500px] bg-primary/5 blur-[120px] rounded-full pointer-events-none select-none" />
 
-      <div className="container-page relative z-10">
+      <div className="page-wrapper relative z-10">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight mb-4 uppercase text-foreground">
             Why Choose <span className="text-primary">Arcade Trade</span>

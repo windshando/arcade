@@ -50,7 +50,7 @@ export default function HeaderClient({ links, locale }: { links: any[], locale: 
           : 'bg-transparent border-b border-transparent'
       }`}
     >
-      <div className="container-page">
+      <div className="page-wrapper">
         <div className="flex justify-between h-16 items-center">
           <div className="flex-shrink-0 flex items-center">
             <Link href="/" className="text-2xl font-bold tracking-tight text-primary">

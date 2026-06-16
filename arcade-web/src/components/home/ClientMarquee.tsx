@@ -29,7 +29,7 @@ export default function ClientMarquee() {
     <section className="py-20 relative overflow-hidden bg-background border-t border-b border-card-border/50">
       <div className="absolute inset-0 bg-gradient-to-r from-background via-transparent to-background z-10 pointer-events-none" />
       
-      <div className="container-page mb-10 text-center relative z-20">
+      <div className="page-wrapper mb-10 text-center relative z-20">
         <p className="text-sm font-bold tracking-[0.2em] uppercase text-primary mb-2">Powered by Global Partners</p>
         <h2 className="text-3xl font-bold opacity-80 text-foreground">Trusted by Leading Entertainment Hubs Worldwide</h2>
       </div>

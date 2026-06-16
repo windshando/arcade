@@ -31,7 +31,7 @@ export default function CategoryAccordion({ categories }: { categories: any[] })
 
   return (
     <section className="py-24 relative overflow-hidden bg-background">
-      <div className="container-page mb-12 text-center relative z-10">
+      <div className="page-wrapper mb-12 text-center relative z-10">
         <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight uppercase text-foreground mb-4">
           Core <span className="text-primary">Ecosystem</span>
         </h2>
@@ -40,7 +40,7 @@ export default function CategoryAccordion({ categories }: { categories: any[] })
         </p>
       </div>
 
-      <div className="container-page h-[800px] md:h-[600px]">
+      <div className="page-wrapper h-[800px] md:h-[600px]">
         <div className="flex flex-col md:flex-row w-full h-full gap-4 transition-all duration-500 ease-in-out">
           {showcaseCategories.map((category, idx) => {
             const isHovered = hoveredIndex === idx;

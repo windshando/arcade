@@ -9,7 +9,7 @@ export default async function CareersPage({ params }: { params: Promise<{ locale
   const postings = await fetchAPI(`/recruitment/public/postings?locale=${extLocale}`).catch(() => []);
 
   return (
-    <main className="container-page py-20 max-w-4xl min-h-screen">
+    <main className="page-wrapper py-20 max-w-4xl min-h-screen">
       <div className="text-center mb-16">
         <h1 className="text-5xl md:text-6xl font-extrabold tracking-tight mb-6 mt-10">Join <span className="text-primary">Our Team</span></h1>
         <p className="text-xl text-text-secondary mb-4 font-light max-w-2xl mx-auto">We are building the next generation of B2B trading platforms. Join us on our mission.</p>

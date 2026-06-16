@@ -15,7 +15,7 @@ export default async function PublicPromotionPage({ params }: { params: Promise<
   }
 
   return (
-    <div className="min-h-[80vh] flex flex-col justify-center container-page max-w-5xl py-16">
+    <div className="min-h-[80vh] flex flex-col justify-center page-wrapper max-w-5xl py-16">
       
       {/* Invisibly injects the campaign ID into the client's browser layer immediately on load */}
       <PromotionTracker slug={promotion.slug} />

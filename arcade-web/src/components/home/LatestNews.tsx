@@ -20,7 +20,7 @@ export default function LatestNews({ posts }: { posts: BlogPost[] }) {
     <section className="py-24 px-12 bg-background relative overflow-hidden">
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-primary/5 via-transparent to-transparent pointer-events-none" />
       
-      <div className="container-page relative z-10">
+      <div className="page-wrapper relative z-10">
         <div className="flex flex-col md:flex-row justify-between items-end mb-16">
           <div className="max-w-2xl">
             <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight mb-4 text-foreground">

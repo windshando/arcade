@@ -8,7 +8,7 @@ export default async function ContactPage({
   const { locale } = await params;
 
   return (
-    <main className="container-page py-16 animate-fade-in">
+    <main className="page-wrapper py-16 animate-fade-in">
       <div className="text-center mb-16">
         <h1 className="text-4xl font-extrabold tracking-tight text-foreground">
           Contact Global Sales

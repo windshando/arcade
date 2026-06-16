@@ -77,7 +77,7 @@ export default function HeroSlider({ slides }: { slides: Slide[] }) {
           <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent pointer-events-none" />
 
           {/* Content Wrapper */}
-          <div className={`relative h-full container-page flex items-center ${
+          <div className={`relative h-full page-wrapper flex items-center ${
             slide.layoutStyle === 'RIGHT_TEXT' ? 'justify-end text-right' : 
             slide.layoutStyle === 'CENTER_BOTTOM' ? 'justify-center items-end pb-32 text-center' : 
             'justify-start text-left'

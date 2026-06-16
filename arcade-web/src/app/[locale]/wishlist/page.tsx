@@ -30,7 +30,7 @@ export default function WishlistPage() {
   }
 
   return (
-    <main className="container-page py-16 animate-fade-in min-h-screen">
+    <main className="page-wrapper py-16 animate-fade-in min-h-screen">
       <div className="mb-12 border-b border-card-border/50 pb-6">
         <h1 className="text-4xl font-extrabold tracking-tight text-foreground">
           My Saved Machines

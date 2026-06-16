@@ -36,7 +36,7 @@ export default function FaqPage({ params }: { params: Promise<{ locale: string }
   }
 
   return (
-    <main className="container-page max-w-4xl py-20 min-h-screen animate-fade-in">
+    <main className="page-wrapper max-w-4xl py-20 min-h-screen animate-fade-in">
       <div className="text-center mb-16">
         <h1 className="text-5xl font-extrabold tracking-tight text-foreground mb-4">
           Frequently Asked Questions

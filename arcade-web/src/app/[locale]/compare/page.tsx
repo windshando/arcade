@@ -37,7 +37,7 @@ export default async function ComparePage({
   ));
 
   return (
-    <main className="container-page py-16 animate-fade-in min-h-screen">
+    <main className="page-wrapper py-16 animate-fade-in min-h-screen">
       <div className="mb-10 flex justify-between items-center">
         <div>
           <h1 className="text-3xl font-extrabold tracking-tight text-foreground">
