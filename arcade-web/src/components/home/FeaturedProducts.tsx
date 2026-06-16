@@ -32,53 +32,62 @@ export default function FeaturedProducts({ products }: { products: any[] }) {
 
       <div className="container-page">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {featured.map((product) => {
+          {featured.map((product, idx) => {
             const hasMedia = product.media && product.media.length > 0;
+            // Gradient backgrounds for cards without images
+            const gradients = [
+              'from-blue-100 via-indigo-50 to-purple-100',
+              'from-emerald-100 via-teal-50 to-cyan-100',
+              'from-amber-100 via-orange-50 to-rose-100',
+              'from-violet-100 via-fuchsia-50 to-pink-100',
+              'from-sky-100 via-blue-50 to-indigo-100',
+              'from-lime-100 via-green-50 to-emerald-100',
+            ];
+            const gradientBg = gradients[idx % gradients.length];
+
             return (
               <Link 
                 href={`/products/${product.slug}`} 
                 key={product.id} 
-                className="group relative overflow-hidden rounded-3xl bg-card-bg border border-card-border/50 card-hover flex flex-col h-[400px]"
+                className="group overflow-hidden rounded-3xl bg-card-bg border border-card-border card-hover flex flex-col shadow-sm hover:shadow-xl transition-all duration-300"
               >
                 {/* Image Section */}
-                <div className="absolute inset-0 bg-surface-elevated z-0">
+                <div className="relative h-64 overflow-hidden">
                   {hasMedia ? (
                     <Image
                       src={product.media[0].url}
                       alt={product.name}
                       fill
-                      className="object-cover opacity-60 group-hover:opacity-80 group-hover:scale-105 transition-all duration-700 ease-out"
+                      className="object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
                     />
                   ) : (
-                    <div className="absolute inset-0 flex items-center justify-center opacity-30 group-hover:scale-105 transition-transform duration-700 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-surface-elevated to-background">
-                       <span className="text-2xl font-black tracking-widest text-text-tertiary uppercase">Classified</span>
+                    <div className={`absolute inset-0 bg-gradient-to-br ${gradientBg} flex items-center justify-center`}>
+                      <span className="text-sm font-bold tracking-widest text-text-tertiary uppercase">No Image</span>
                     </div>
                   )}
-                  {/* Subtle Gradient Overlays */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
-                  <div className="absolute inset-0 bg-gradient-to-r from-black/80 to-transparent" />
-                </div>
-
-                {/* Content Overlay */}
-                <div className="relative z-10 p-8 flex flex-col h-full justify-end">
-                  <div className="mb-auto flex justify-between items-start">
-                    <span className="px-3 py-1 text-[10px] font-black tracking-widest uppercase bg-primary/20 text-primary border border-primary/30 rounded-full shadow-[0_0_10px_rgba(var(--primary),0.2)]">
+                  {/* Category Badge */}
+                  <div className="absolute top-4 left-4 z-10">
+                    <span className="px-3 py-1 text-[10px] font-black tracking-widest uppercase bg-card-bg/90 backdrop-blur-sm text-primary border border-card-border rounded-full shadow-sm">
                       {product.category || 'Arcade'}
                     </span>
-                    <div onClick={(e) => e.preventDefault()} className="z-20">
-                      <ProductActions slug={product.slug} />
-                    </div>
                   </div>
+                  {/* Actions */}
+                  <div className="absolute top-4 right-4 z-10" onClick={(e) => e.preventDefault()}>
+                    <ProductActions slug={product.slug} />
+                  </div>
+                </div>
 
-                  <div className="transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
-                    <h3 className="text-2xl md:text-3xl font-extrabold tracking-tight text-on-dark mb-2 leading-tight">
-                      {product.name}
-                    </h3>
-                    <div className="h-0 group-hover:h-12 opacity-0 group-hover:opacity-100 transition-all duration-500 overflow-hidden">
-                      <p className="text-sm text-on-dark/70 line-clamp-2">
-                        {product.shortDescription || 'Experience industry-leading ROI with our state-of-the-art gaming hardware.'}
-                      </p>
-                    </div>
+                {/* Content Section */}
+                <div className="p-6 flex flex-col flex-1">
+                  <h3 className="text-xl font-bold tracking-tight text-foreground mb-2 leading-tight group-hover:text-primary transition-colors line-clamp-2">
+                    {product.name}
+                  </h3>
+                  <p className="text-sm text-text-secondary line-clamp-2 flex-1">
+                    {product.shortDescription || 'Experience industry-leading ROI with our state-of-the-art gaming hardware.'}
+                  </p>
+                  <div className="mt-4 pt-4 border-t border-card-border/50 flex items-center justify-between text-sm font-bold text-primary">
+                    <span>View Details</span>
+                    <ChevronRight size={16} className="group-hover:translate-x-1 transition-transform" />
                   </div>
                 </div>
               </Link>
