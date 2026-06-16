@@ -3,7 +3,7 @@
 import React from 'react';
 import { useProductStore } from './ProductStoreProvider';
 import { X, Scale } from 'lucide-react';
-import { useRouter } from 'next/navigation';
+import { useRouter } from '@/i18n/routing';
 
 export default function StickyCompareBar() {
   const { compareList, clearCompare, mounted } = useProductStore();
@@ -12,7 +12,7 @@ export default function StickyCompareBar() {
   if (!mounted || compareList.length === 0) return null;
 
   const handleCompare = () => {
-    router.push(`/en/compare?slugs=${compareList.join(',')}`);
+    router.push(`/compare?slugs=${compareList.join(',')}`);
   };
 
   return (
@@ -37,7 +37,7 @@ export default function StickyCompareBar() {
         <div className="flex items-center gap-3">
           <button 
             onClick={clearCompare}
-            className="text-xs font-bold text-foreground opacity-60 hover:opacity-100 hover:text-red-500 transition-colors uppercase tracking-widest px-2"
+            className="text-xs font-bold text-foreground opacity-60 hover:opacity-100 hover:text-danger transition-colors uppercase tracking-widest px-2"
           >
             Clear
           </button>

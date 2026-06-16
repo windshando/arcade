@@ -36,12 +36,12 @@ export default function FaqPage({ params }: { params: Promise<{ locale: string }
   }
 
   return (
-    <main className="max-w-4xl mx-auto px-4 sm:px-6 py-20 min-h-screen animate-fade-in">
+    <main className="container-page max-w-4xl py-20 min-h-screen animate-fade-in">
       <div className="text-center mb-16">
         <h1 className="text-5xl font-extrabold tracking-tight text-foreground mb-4">
           Frequently Asked Questions
         </h1>
-        <p className="text-xl opacity-70 mb-10 max-w-2xl mx-auto">
+        <p className="text-xl text-text-secondary mb-10 max-w-2xl mx-auto">
           Find answers to common questions about our arcade machines, shipping, warranties, and customization.
         </p>
 

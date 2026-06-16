@@ -1,5 +1,5 @@
 import { fetchAPI } from '@/lib/api';
-import Link from 'next/link';
+import { Link } from '@/i18n/routing';
 
 export const revalidate = 60;
 
@@ -9,10 +9,10 @@ export default async function CareersPage({ params }: { params: Promise<{ locale
   const postings = await fetchAPI(`/recruitment/public/postings?locale=${extLocale}`).catch(() => []);
 
   return (
-    <main className="py-20 px-8 mx-auto max-w-4xl min-h-screen">
+    <main className="container-page py-20 max-w-4xl min-h-screen">
       <div className="text-center mb-16">
         <h1 className="text-5xl md:text-6xl font-extrabold tracking-tight mb-6 mt-10">Join <span className="text-primary">Our Team</span></h1>
-        <p className="text-xl opacity-70 mb-4 font-light max-w-2xl mx-auto">We are building the next generation of B2B trading platforms. Join us on our mission.</p>
+        <p className="text-xl text-text-secondary mb-4 font-light max-w-2xl mx-auto">We are building the next generation of B2B trading platforms. Join us on our mission.</p>
       </div>
 
       {postings.length === 0 ? (
@@ -23,7 +23,7 @@ export default async function CareersPage({ params }: { params: Promise<{ locale
         <div className="space-y-6">
           <h2 className="text-2xl font-bold text-foreground text-center mb-10">Open Roles</h2>
           {postings.map((job: any) => (
-            <Link key={job.id} href={`/${locale}/careers/${job.id}`} className="block glass-panel p-8 rounded-3xl border border-card-border hover:shadow-xl hover:border-primary/30 transition-all cursor-pointer group">
+            <Link key={job.id} href={`/careers/${job.id}`} className="block glass-panel p-8 rounded-3xl border border-card-border hover:shadow-xl hover:border-primary/30 transition-all cursor-pointer group">
               <div className="flex flex-col md:flex-row justify-between md:items-center gap-4 mb-4">
                 <div>
                   <h3 className="text-xl font-bold text-primary group-hover:underline">{job.translations?.[0]?.title || 'Untitled Role'}</h3>

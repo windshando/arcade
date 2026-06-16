@@ -31,7 +31,7 @@ export default function CategoryAccordion({ categories }: { categories: any[] })
 
   return (
     <section className="py-24 relative overflow-hidden bg-background">
-      <div className="container mx-auto px-6 mb-12 text-center relative z-10">
+      <div className="container-page mb-12 text-center relative z-10">
         <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight uppercase text-foreground mb-4">
           Core <span className="text-primary">Ecosystem</span>
         </h2>
@@ -40,7 +40,7 @@ export default function CategoryAccordion({ categories }: { categories: any[] })
         </p>
       </div>
 
-      <div className="container mx-auto px-6 h-[800px] md:h-[600px]">
+      <div className="container-page h-[800px] md:h-[600px]">
         <div className="flex flex-col md:flex-row w-full h-full gap-4 transition-all duration-500 ease-in-out">
           {showcaseCategories.map((category, idx) => {
             const isHovered = hoveredIndex === idx;
@@ -69,7 +69,7 @@ export default function CategoryAccordion({ categories }: { categories: any[] })
                     className={`object-cover transition-transform duration-1000 ${isHovered ? 'scale-110' : 'scale-100 grayscale-[50%]'}`} 
                   />
                 ) : (
-                  <div className={`absolute inset-0 bg-slate-900 transition-transform duration-1000 ${isHovered ? 'scale-110' : 'scale-100'}`}>
+                  <div className={`absolute inset-0 bg-surface-elevated transition-transform duration-1000 ${isHovered ? 'scale-110' : 'scale-100'}`}>
                     {/* Placeholder abstract grid for cyber feel */}
                     <div className="absolute inset-0" style={{
                       backgroundImage: 'linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px)',
@@ -87,13 +87,13 @@ export default function CategoryAccordion({ categories }: { categories: any[] })
                     <div className={`mb-4 transition-transform duration-700 ${isHovered ? 'scale-100' : 'scale-75 origin-bottom-left'}`}>
                       {icon}
                     </div>
-                    <h3 className={`font-extrabold uppercase tracking-tight transition-all duration-700 ${isHovered ? 'text-4xl text-white' : 'text-2xl text-slate-300'}`}>
+                    <h3 className={`font-extrabold uppercase tracking-tight transition-all duration-700 ${isHovered ? 'text-4xl text-on-dark' : 'text-2xl text-text-secondary'}`}>
                       {category.name}
                     </h3>
                   </div>
 
                   <div className={`mt-4 overflow-hidden transition-all duration-700 ${isHovered ? 'max-h-40 opacity-100 delay-100' : 'max-h-0 opacity-0'}`}>
-                    <p className="text-slate-300 mb-6 line-clamp-3">
+                    <p className="text-text-secondary mb-6 line-clamp-3">
                       {category.description || 'Dive into our cutting-edge immersive systems tailored for global entertainment hubs.'}
                     </p>
                     <Link 

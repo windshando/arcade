@@ -9,9 +9,6 @@ export default function FloatingContactWidget() {
   const [isOpen, setIsOpen] = useState(false);
   const [globalOps, setGlobalOps] = useState<any>({});
 
-  // Hide on admin pages
-  if (pathname.includes('/admin')) return null;
-
   useEffect(() => {
     // Fetch public settings for contact info
     const fetchSettings = async () => {
@@ -29,10 +26,12 @@ export default function FloatingContactWidget() {
   const whatsapp = globalOps.contactWhatsapp || '1234567890';
   const phone = globalOps.contactPhone || '1234567890';
 
+  if (pathname.includes('/admin')) return null;
+
   return (
     <div className="fixed bottom-24 right-6 z-40 flex flex-col items-end gap-3">
       {isOpen && (
-        <div className="flex flex-col gap-3 animate-fade-in-up">
+        <div className="flex flex-col gap-3 animate-slide-up">
           <a
             href={`https://wa.me/${whatsapp.replace(/\D/g, '')}`}
             target="_blank"
@@ -44,7 +43,7 @@ export default function FloatingContactWidget() {
           </a>
           <a
             href={`tel:${phone.replace(/[^\d+]/g, '')}`}
-            className="flex items-center gap-3 bg-primary text-primary-foreground px-4 py-3 rounded-full shadow-lg hover:-translate-y-1 transition-transform"
+            className="flex items-center gap-3 bg-primary text-on-dark px-4 py-3 rounded-full shadow-lg hover:-translate-y-1 transition-transform"
           >
             <span className="font-bold text-sm">Call Us</span>
             <Phone size={20} />

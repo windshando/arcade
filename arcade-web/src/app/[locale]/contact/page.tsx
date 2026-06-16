@@ -8,12 +8,12 @@ export default async function ContactPage({
   const { locale } = await params;
 
   return (
-    <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 animate-fade-in">
+    <main className="container-page py-16 animate-fade-in">
       <div className="text-center mb-16">
         <h1 className="text-4xl font-extrabold tracking-tight text-foreground">
           Contact Global Sales
         </h1>
-        <p className="mt-4 max-w-2xl mx-auto text-xl opacity-70">
+        <p className="mt-4 max-w-2xl mx-auto text-xl text-text-secondary">
           Get in touch with our commercial team for bulk pricing, customization requirements, and shipping timelines.
         </p>
       </div>
@@ -33,7 +33,7 @@ export default async function ContactPage({
                 </div>
                 <div>
                   <p className="text-sm font-medium opacity-60 mb-1">Email Support</p>
-                  <p className="font-semibold text-lg">sales@example.com</p>
+                  <p className="font-semibold text-lg">sales@arcademaster.com</p>
                 </div>
               </div>
 
@@ -45,7 +45,7 @@ export default async function ContactPage({
                 </div>
                 <div>
                   <p className="text-sm font-medium opacity-60 mb-1">Global Phone</p>
-                  <p className="font-semibold text-lg">+1 555 000 0000</p>
+                  <p className="font-semibold text-lg">+1 (800) 555-0199</p>
                 </div>
               </div>
 

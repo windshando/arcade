@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTracking } from '@/components/TrackingProvider';
 import RecaptchaField from '@/components/forms/RecaptchaField';
 
@@ -20,6 +20,18 @@ export default function RequestQuoteButton({
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const { getTrackingData } = useTracking();
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && open && !loading) {
+        setOpen(false);
+      }
+    };
+    if (open) {
+      window.addEventListener('keydown', handleKeyDown);
+    }
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [open, loading]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -74,8 +86,11 @@ export default function RequestQuoteButton({
       </button>
 
       {open && (
-        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/60 backdrop-blur-sm animate-fade-in p-4" onClick={() => !loading && setOpen(false)}>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm animate-fade-in p-4" onClick={() => !loading && setOpen(false)}>
           <div
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="quote-modal-title"
             className="bg-card-bg border border-card-border rounded-3xl shadow-2xl w-full max-w-xl max-h-[90vh] overflow-y-auto p-8 sm:p-10 relative"
             onClick={e => e.stopPropagation()}
           >
@@ -83,7 +98,7 @@ export default function RequestQuoteButton({
 
             {success ? (
               <div className="text-center py-12">
-                <div className="w-16 h-16 bg-green-500/10 text-green-500 rounded-full flex items-center justify-center mx-auto mb-6">
+                <div className="w-16 h-16 bg-success/10 text-success rounded-full flex items-center justify-center mx-auto mb-6">
                   <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" /></svg>
                 </div>
                 <h3 className="text-2xl font-bold mb-2">Quote Request Sent!</h3>
@@ -92,7 +107,7 @@ export default function RequestQuoteButton({
               </div>
             ) : (
               <>
-                <h2 className="text-2xl font-bold mb-1">Request a Quote</h2>
+                <h2 id="quote-modal-title" className="text-2xl font-bold mb-1">Request a Quote</h2>
                 <p className="text-primary font-bold mb-6">{productName}</p>
 
                 <form onSubmit={handleSubmit} className="space-y-5">

@@ -5,8 +5,10 @@ import { useProductStore } from '@/components/products/ProductStoreProvider';
 import { getPublicProducts } from '@/lib/api';
 import { Link } from '@/i18n/routing';
 import ProductActions from '@/components/products/ProductActions';
+import { useLocale } from 'next-intl';
 
 export default function WishlistPage() {
+  const locale = useLocale();
   const { wishlist, mounted } = useProductStore();
   const [products, setProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -15,7 +17,7 @@ export default function WishlistPage() {
     if (!mounted) return;
     
     // We fetch all products globally and filter to ensure we get up-to-date catalog info
-    getPublicProducts('EN')
+    getPublicProducts(locale.toUpperCase() === 'ZH-CN' || locale === 'zh' ? 'ZH_CN' : 'EN')
       .then(allProducts => {
         setProducts(allProducts.filter((p: any) => wishlist.includes(p.slug)));
       })
@@ -28,12 +30,12 @@ export default function WishlistPage() {
   }
 
   return (
-    <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 animate-fade-in min-h-screen">
+    <main className="container-page py-16 animate-fade-in min-h-screen">
       <div className="mb-12 border-b border-card-border/50 pb-6">
         <h1 className="text-4xl font-extrabold tracking-tight text-foreground">
           My Saved Machines
         </h1>
-        <p className="mt-2 opacity-70">
+        <p className="mt-2 text-text-secondary">
           You have {products.length} machine{products.length !== 1 ? 's' : ''} in your wishlist. {products.length > 0 && "Your list is securely saved on this device."}
         </p>
       </div>
@@ -50,26 +52,26 @@ export default function WishlistPage() {
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
           {products.map((product: any) => (
-            <Link href={`/products/${product.slug}`} key={product.id} className="group card-hover">
-              <div className="glass-panel rounded-2xl overflow-hidden h-full flex flex-col relative border border-card-border/50 hover:border-red-500/50">
-                <div className="absolute top-3 right-3 z-10">
-                  <ProductActions slug={product.slug} />
-                </div>
-                <div className="aspect-square bg-gray-100 flex items-center justify-center overflow-hidden">
+            <div key={product.id} className="group card-hover relative">
+              <div className="absolute top-3 right-3 z-10">
+                <ProductActions slug={product.slug} />
+              </div>
+              <Link href={`/products/${product.slug}`} className="glass-panel rounded-2xl overflow-hidden h-full flex flex-col relative border border-card-border/50 hover:border-danger/50">
+                <div className="aspect-square bg-surface-elevated flex items-center justify-center overflow-hidden">
                   {product.media[0] ? (
                     <div className="w-full h-full bg-cover bg-center" style={{ backgroundImage: `url(${product.media[0].url})` }} />
                   ) : (
-                    <span className="text-gray-400 font-medium tracking-widest text-xs">NO IMAGE</span>
+                    <span className="text-text-tertiary font-medium tracking-widest text-xs">NO IMAGE</span>
                   )}
                 </div>
                 <div className="p-5 flex flex-col flex-1">
                   <p className="text-xs text-primary font-black tracking-widest uppercase mb-1">{product.category}</p>
-                  <h3 className="text-lg font-bold text-foreground transition-colors group-hover:text-red-500 line-clamp-1 pb-1">
+                  <h3 className="text-lg font-bold text-foreground transition-colors group-hover:text-danger line-clamp-1 pb-1">
                     {product.name}
                   </h3>
                 </div>
-              </div>
-            </Link>
+              </Link>
+            </div>
           ))}
         </div>
       )}

@@ -1,6 +1,7 @@
 import React from 'react';
 import { getPublicPromotion } from '@/lib/api';
 import { notFound } from 'next/navigation';
+import { Link } from '@/i18n/routing';
 import PromotionTracker from './PromotionTracker'; // Client component
 
 export default async function PublicPromotionPage({ params }: { params: Promise<{ slug: string }> }) {
@@ -14,7 +15,7 @@ export default async function PublicPromotionPage({ params }: { params: Promise<
   }
 
   return (
-    <div className="min-h-[80vh] flex flex-col justify-center max-w-5xl mx-auto px-4 py-16">
+    <div className="min-h-[80vh] flex flex-col justify-center container-page max-w-5xl py-16">
       
       {/* Invisibly injects the campaign ID into the client's browser layer immediately on load */}
       <PromotionTracker slug={promotion.slug} />
@@ -34,15 +35,15 @@ export default async function PublicPromotionPage({ params }: { params: Promise<
         />
         
         <div className="pt-8 flex justify-center gap-6">
-          <a href={
+          <Link href={
             promotion.targetProduct
-              ? `/en/products/${promotion.targetProduct.slug}`
+              ? `/products/${promotion.targetProduct.slug}`
               : promotion.targetCategory 
-              ? `/en/products?categorySlug=${promotion.targetCategory.slug}`
-              : "/en/products"
+              ? `/products?categorySlug=${promotion.targetCategory.slug}`
+              : "/products"
           } className="btn-primary py-4 px-10 text-lg shadow-xl shadow-primary/20">
              {promotion.targetProduct ? 'View Featured Machine →' : 'Explore Eligible Products →'}
-          </a>
+          </Link>
         </div>
       </div>
     </div>

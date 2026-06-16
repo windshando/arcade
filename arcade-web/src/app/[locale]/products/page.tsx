@@ -1,8 +1,17 @@
 import { getPublicProducts, getPublicCategories } from '@/lib/api';
 import { Link } from '@/i18n/routing';
 import ProductActions from '@/components/products/ProductActions';
+import StickyCompareBar from '@/components/products/StickyCompareBar';
+import { Metadata } from 'next';
 
 export const revalidate = 60; // 1 minute
+
+export async function generateMetadata(): Promise<Metadata> {
+  return {
+    title: 'Arcade Machines Catalog | Arcade Trade',
+    description: 'Browse our full catalog of premium arcade machines, redemption games, and VR simulators available for global shipping.',
+  };
+}
 
 export default async function ProductsPage({
   params,
@@ -69,7 +78,7 @@ export default async function ProductsPage({
                     {product.media.length > 0 ? (
                       <div className="w-full h-full bg-cover bg-center" style={{ backgroundImage: `url(${product.media[0].url})` }} />
                     ) : (
-                      <span className="text-gray-400 font-medium tracking-widest text-sm">NO IMAGE</span>
+                      <span className="text-text-tertiary font-medium tracking-widest text-sm">NO IMAGE</span>
                     )}
                   </div>
                   <div className="p-6 flex flex-col flex-1">

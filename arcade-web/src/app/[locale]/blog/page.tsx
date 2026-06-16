@@ -1,7 +1,15 @@
 import { getPublicPosts } from '@/lib/api';
 import { Link } from '@/i18n/routing';
+import { Metadata } from 'next';
 
-export const revalidate = 3600;
+export const revalidate = 60;
+
+export async function generateMetadata(): Promise<Metadata> {
+  return {
+    title: 'News & Insights | Arcade Trade',
+    description: 'Read the latest news, product updates, and industry insights from Arcade Trade.',
+  };
+}
 
 export default async function BlogArchivePage({
   params,

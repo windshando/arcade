@@ -13,7 +13,7 @@ export default function FeaturedProducts({ products }: { products: any[] }) {
 
   return (
     <section className="py-24 relative bg-background">
-      <div className="container mx-auto px-6 mb-16 text-center md:text-left flex flex-col md:flex-row justify-between items-end gap-6">
+      <div className="container-page mb-16 text-center md:text-left flex flex-col md:flex-row justify-between items-end gap-6">
         <div className="max-w-2xl">
           <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight uppercase text-foreground mb-4">
             Flagship <span className="text-primary">Machines</span>
@@ -30,7 +30,7 @@ export default function FeaturedProducts({ products }: { products: any[] }) {
         </Link>
       </div>
 
-      <div className="container mx-auto px-6">
+      <div className="container-page">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {featured.map((product) => {
             const hasMedia = product.media && product.media.length > 0;
@@ -41,15 +41,17 @@ export default function FeaturedProducts({ products }: { products: any[] }) {
                 className="group relative overflow-hidden rounded-3xl bg-card-bg border border-card-border/50 card-hover flex flex-col h-[400px]"
               >
                 {/* Image Section */}
-                <div className="absolute inset-0 bg-black z-0">
+                <div className="absolute inset-0 bg-surface-elevated z-0">
                   {hasMedia ? (
-                    <div 
-                      className="w-full h-full bg-cover bg-center opacity-60 group-hover:opacity-80 group-hover:scale-105 transition-all duration-700 ease-out" 
-                      style={{ backgroundImage: `url(${product.media[0].url})` }} 
+                    <Image
+                      src={product.media[0].url}
+                      alt={product.name}
+                      fill
+                      className="object-cover opacity-60 group-hover:opacity-80 group-hover:scale-105 transition-all duration-700 ease-out"
                     />
                   ) : (
-                    <div className="absolute inset-0 flex items-center justify-center opacity-30 group-hover:scale-105 transition-transform duration-700 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-slate-800 to-black">
-                       <span className="text-2xl font-black tracking-widest text-slate-700 uppercase">Classified</span>
+                    <div className="absolute inset-0 flex items-center justify-center opacity-30 group-hover:scale-105 transition-transform duration-700 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-surface-elevated to-background">
+                       <span className="text-2xl font-black tracking-widest text-text-tertiary uppercase">Classified</span>
                     </div>
                   )}
                   {/* Subtle Gradient Overlays */}
@@ -69,11 +71,11 @@ export default function FeaturedProducts({ products }: { products: any[] }) {
                   </div>
 
                   <div className="transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
-                    <h3 className="text-2xl md:text-3xl font-extrabold tracking-tight text-white mb-2 leading-tight">
+                    <h3 className="text-2xl md:text-3xl font-extrabold tracking-tight text-on-dark mb-2 leading-tight">
                       {product.name}
                     </h3>
                     <div className="h-0 group-hover:h-12 opacity-0 group-hover:opacity-100 transition-all duration-500 overflow-hidden">
-                      <p className="text-sm text-slate-300 line-clamp-2">
+                      <p className="text-sm text-on-dark/70 line-clamp-2">
                         {product.shortDescription || 'Experience industry-leading ROI with our state-of-the-art gaming hardware.'}
                       </p>
                     </div>

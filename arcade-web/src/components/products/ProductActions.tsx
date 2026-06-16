@@ -22,9 +22,10 @@ export default function ProductActions({ slug, className = "" }: { slug: string,
     <div className={`flex items-center gap-2 ${className}`}>
       <button
         onClick={(e) => { e.preventDefault(); toggleCompare(slug); }}
+        aria-pressed={inCompare}
         className={`p-2.5 rounded-full border shadow-sm transition-all flex items-center justify-center group ${
           inCompare 
-            ? 'bg-blue-500 text-white border-blue-500 hover:bg-blue-600' 
+            ? 'bg-primary text-on-dark border-primary hover:bg-primary-hover' 
             : 'bg-card-bg/50 border-card-border/50 text-foreground hover:border-primary hover:text-primary'
         }`}
         title={inCompare ? "Remove from Compare" : "Add to Compare"}
@@ -34,10 +35,11 @@ export default function ProductActions({ slug, className = "" }: { slug: string,
       
       <button
         onClick={(e) => { e.preventDefault(); toggleWishlist(slug); }}
+        aria-pressed={inWishlist}
         className={`p-2.5 rounded-full border shadow-sm transition-all flex items-center justify-center group ${
           inWishlist 
-            ? 'bg-red-500 text-white border-red-500 hover:bg-red-600' 
-            : 'bg-card-bg/50 border-card-border/50 text-foreground hover:border-red-500 hover:text-red-500'
+            ? 'bg-danger text-on-dark border-danger hover:brightness-110' 
+            : 'bg-card-bg/50 border-card-border/50 text-foreground hover:border-danger hover:text-danger'
         }`}
         title={inWishlist ? "Remove from Wishlist" : "Add to Wishlist"}
       >

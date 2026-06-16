@@ -8,6 +8,19 @@ import LatestNews from '@/components/home/LatestNews';
 import FooterCTA from '@/components/home/FooterCTA';
 import { getMessages } from 'next-intl/server';
 
+import { Metadata } from 'next';
+
+export async function generateMetadata(): Promise<Metadata> {
+  return {
+    title: 'Arcade Trade | Premium B2B Amusement Machine Platform',
+    description: 'The world\'s leading B2B marketplace for high-end arcade, redemption, and VR machines. Get industrial-grade amusement equipment.',
+    openGraph: {
+      type: 'website',
+      siteName: 'Arcade Trade',
+    }
+  };
+}
+
 export default async function HomePage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   

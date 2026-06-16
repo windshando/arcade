@@ -89,9 +89,9 @@ export default function ChatWidget() {
   return (
     <div className="fixed bottom-6 right-6 z-50 font-sans">
       {isOpen ? (
-        <div className="w-80 h-[26rem] bg-white/70 backdrop-blur-xl border border-white/20 shadow-2xl shadow-blue-900/10 rounded-2xl flex flex-col overflow-hidden text-gray-800 transition-all">
+        <div className="w-80 h-[26rem] bg-surface-elevated/70 backdrop-blur-xl border border-border-subtle shadow-xl rounded-2xl flex flex-col overflow-hidden text-foreground transition-all animate-slide-up">
           {/* Header */}
-          <div className="bg-slate-800 text-white px-4 py-3 flex justify-between items-center shadow-sm">
+          <div className="bg-primary text-on-dark px-4 py-3 flex justify-between items-center shadow-sm">
             <div className="flex items-center gap-2">
               <h3 className="font-semibold text-sm tracking-wide">Customer Support</h3>
               {isAgentOnline && (
@@ -100,7 +100,7 @@ export default function ChatWidget() {
                 </span>
               )}
             </div>
-            <button onClick={() => setIsOpen(false)} className="hover:text-blue-200 transition-colors">
+            <button onClick={() => setIsOpen(false)} className="hover:opacity-70 transition-opacity">
               <X size={18} />
             </button>
           </div>
@@ -108,11 +108,11 @@ export default function ChatWidget() {
           {!session?.email ? (
             /* Email Capture State */
             <div className="flex-1 flex flex-col p-6 items-center justify-center text-center">
-              <div className="w-12 h-12 bg-blue-50 border border-blue-100 rounded-full flex items-center text-blue-600 justify-center mb-4">
+              <div className="w-12 h-12 bg-primary/10 border border-primary/20 rounded-full flex items-center text-primary justify-center mb-4">
                 <User size={24} />
               </div>
-              <h4 className="font-medium text-gray-800 mb-2">Welcome!</h4>
-              <p className="text-sm text-gray-500 mb-6 leading-relaxed">
+              <h4 className="font-medium text-foreground mb-2">Welcome!</h4>
+              <p className="text-sm text-text-secondary mb-6 leading-relaxed">
                 {isAgentOnline 
                   ? "Before we start, please enter your details so we can follow up."
                   : "All agents are offline. Leave a message and we'll email you back."}
@@ -122,7 +122,7 @@ export default function ChatWidget() {
                   type="text"
                   required
                   placeholder="Your Name"
-                  className="w-full px-4 py-2 border border-gray-200 bg-white shadow-inner rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+                  className="w-full px-4 py-2 border border-border-subtle bg-background shadow-inner rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                 />
@@ -130,11 +130,11 @@ export default function ChatWidget() {
                   type="email"
                   required
                   placeholder="your@email.com"
-                  className="w-full px-4 py-2 border border-gray-200 bg-white shadow-inner rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50"
+                  className="w-full px-4 py-2 border border-border-subtle bg-background shadow-inner rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                 />
-                <button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 rounded-xl text-sm font-medium transition-colors shadow-sm">
+                <button type="submit" className="w-full btn-primary text-sm shadow-sm">
                   Start Chat
                 </button>
               </form>
@@ -142,8 +142,8 @@ export default function ChatWidget() {
           ) : (
             /* Chatting State */
             <>
-              <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-slate-50/50">
-                <p className="text-center text-xs text-slate-400 mt-2 mb-4">
+              <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-background/50">
+                <p className="text-center text-xs text-text-tertiary mt-2 mb-4">
                   {isAgentOnline 
                     ? "Chat Started. We usually reply in a few minutes."
                     : "Message Sent. An agent will follow up via email."}
@@ -151,9 +151,9 @@ export default function ChatWidget() {
                 {messages.map((msg, idx) => (
                   <div key={idx} className={`flex flex-col ${msg.senderType === 'VISITOR' ? 'items-end' : 'items-start'} mb-2`}>
                     {msg.senderName && (
-                      <span className="text-[10px] text-gray-400 mb-1 px-1">{msg.senderName}</span>
+                      <span className="text-[10px] text-text-tertiary mb-1 px-1">{msg.senderName}</span>
                     )}
-                    <div className={`px-4 py-2.5 rounded-2xl max-w-[85%] text-sm shadow-sm ${msg.senderType === 'VISITOR' ? 'bg-blue-600 text-white rounded-br-sm' : 'bg-white border border-gray-100 text-gray-700 rounded-bl-sm'}`}>
+                    <div className={`px-4 py-2.5 rounded-2xl max-w-[85%] text-sm shadow-sm ${msg.senderType === 'VISITOR' ? 'bg-primary text-on-dark rounded-br-sm' : 'bg-surface-elevated border border-border-subtle text-foreground rounded-bl-sm'}`}>
                       {msg.content}
                     </div>
                   </div>
@@ -162,16 +162,16 @@ export default function ChatWidget() {
               </div>
 
               {/* Input Area */}
-              <form onSubmit={handleSend} className="p-3 border-t border-gray-100 bg-white/90 backdrop-blur-md">
+              <form onSubmit={handleSend} className="p-3 border-t border-border-subtle bg-surface-elevated/90 backdrop-blur-md">
                 <div className="relative flex items-center">
                   <input
                     type="text"
                     placeholder="Type a message..."
-                    className="w-full pl-4 pr-12 py-2.5 bg-slate-100 border-none rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/30"
+                    className="w-full pl-4 pr-12 py-2.5 bg-background border border-border-subtle rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
                     value={inputValue}
                     onChange={(e) => setInputValue(e.target.value)}
                   />
-                  <button type="submit" className="absolute right-1.5 p-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition flex items-center justify-center">
+                  <button type="submit" className="absolute right-1.5 p-2 bg-primary text-on-dark rounded-full hover:bg-primary-hover transition flex items-center justify-center">
                     <Send size={14} className="ml-0.5" />
                   </button>
                 </div>
@@ -183,7 +183,7 @@ export default function ChatWidget() {
         <button
           onClick={() => setIsOpen(true)}
           className={`w-14 h-14 rounded-full shadow-xl flex items-center justify-center transition-transform hover:scale-105 active:scale-95 border relative
-            ${isAgentOnline ? 'bg-slate-800 hover:bg-slate-700 text-white border-slate-700' : 'bg-slate-400 hover:bg-slate-500 text-slate-100 border-slate-400'}
+            ${isAgentOnline ? 'bg-primary hover:bg-primary-hover text-on-dark border-primary' : 'bg-surface-elevated hover:bg-border-subtle text-foreground border-border-subtle'}
           `}
         >
           <MessageCircle size={26} />

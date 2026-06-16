@@ -14,6 +14,20 @@ import FloatingContactWidget from '@/components/FloatingContactWidget';
 import TrackingProvider from '@/components/TrackingProvider';
 import LayoutManager from '@/components/layout/LayoutManager';
 import '../globals.css';
+import { Inter } from 'next/font/google';
+
+const inter = Inter({ subsets: ['latin'], display: 'swap', variable: '--font-inter' });
+
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  return {
+    title: {
+      template: '%s | Arcade Trade',
+      default: 'Arcade Trade - Industrial B2B Platform',
+    },
+    description: 'World-class industrial B2B trading platform for arcades.',
+  };
+}
 
 export default async function LocaleLayout({
   children,
@@ -56,10 +70,6 @@ export default async function LocaleLayout({
   return (
     <html lang={locale} dir={locale === 'ar' ? 'rtl' : 'ltr'} data-theme={currentTheme}>
       <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-        <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet" />
         {globalOps.gaTrackingId && (
           <>
             <Script src={`https://www.googletagmanager.com/gtag/js?id=${globalOps.gaTrackingId}`} strategy="afterInteractive" />
@@ -74,7 +84,10 @@ export default async function LocaleLayout({
           </>
         )}
       </head>
-      <body className="flex flex-col min-h-screen">
+      <body className={`flex flex-col min-h-screen ${inter.variable}`}>
+        <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:z-[9999] focus:p-4 focus:bg-primary focus:text-white">
+          Skip to main content
+        </a>
         <NextIntlClientProvider locale={locale} messages={messages}>
           <TrackingProvider>
             <ProductStoreProvider>
@@ -84,7 +97,9 @@ export default async function LocaleLayout({
                 headerNode={<Header />}
                 footerNode={<Footer copyright={globalOps.copyright} />}
               >
-                {children}
+                <div id="main-content" className="flex-1 w-full flex flex-col">
+                  {children}
+                </div>
               </LayoutManager>
               
               <FloatingContactWidget />

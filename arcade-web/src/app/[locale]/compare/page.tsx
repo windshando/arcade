@@ -37,7 +37,7 @@ export default async function ComparePage({
   ));
 
   return (
-    <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 animate-fade-in min-h-screen">
+    <main className="container-page py-16 animate-fade-in min-h-screen">
       <div className="mb-10 flex justify-between items-center">
         <div>
           <h1 className="text-3xl font-extrabold tracking-tight text-foreground">
@@ -54,6 +54,7 @@ export default async function ComparePage({
 
       <div className="glass-panel overflow-x-auto rounded-3xl p-6">
         <table className="w-full text-left border-collapse min-w-[800px]">
+          <caption className="sr-only">Machine Specifications Comparison</caption>
           <thead>
             <tr>
               <th className="w-48 p-4 font-bold opacity-60 uppercase text-xs tracking-widest border-b border-card-border/50 bg-card-bg/50">

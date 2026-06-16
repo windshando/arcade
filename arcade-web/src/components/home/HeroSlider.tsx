@@ -77,7 +77,7 @@ export default function HeroSlider({ slides }: { slides: Slide[] }) {
           <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent pointer-events-none" />
 
           {/* Content Wrapper */}
-          <div className={`relative h-full container mx-auto px-6 flex items-center ${
+          <div className={`relative h-full container-page flex items-center ${
             slide.layoutStyle === 'RIGHT_TEXT' ? 'justify-end text-right' : 
             slide.layoutStyle === 'CENTER_BOTTOM' ? 'justify-center items-end pb-32 text-center' : 
             'justify-start text-left'
@@ -85,10 +85,10 @@ export default function HeroSlider({ slides }: { slides: Slide[] }) {
             <div className={`max-w-3xl transform transition-all duration-700 delay-300 ${
                 idx === current ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'
             }`}>
-                <h1 className="text-4xl md:text-8xl font-black text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)] mb-6 leading-[1] uppercase tracking-tight">
+                <h1 className="text-display-md md:text-display-xl font-black text-on-dark drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)] mb-6 leading-[1] uppercase tracking-tight">
                     {slide.title}
                 </h1>
-                <p className="text-lg md:text-2xl text-white/90 mb-10 drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)] font-medium max-w-2xl mx-auto md:mx-0"
+                <p className="text-body-lg md:text-xl text-on-dark/90 mb-10 drop-shadow-[0_1px_2px_rgba(0,0,0,0.5)] font-medium max-w-2xl mx-auto md:mx-0"
                    style={{ marginLeft: slide.layoutStyle === 'CENTER_BOTTOM' ? 'auto' : (slide.layoutStyle === 'RIGHT_TEXT' ? 'auto' : '0') }}
                 >
                     {slide.subtitle}
@@ -98,7 +98,7 @@ export default function HeroSlider({ slides }: { slides: Slide[] }) {
                         href={slide.url || '#'}
                         className={`inline-block px-12 py-5 rounded-full text-lg font-bold uppercase tracking-wider transition-all shadow-2xl hover:scale-105 active:scale-95 ${
                             slide.buttonStyle === 'DARK' 
-                            ? 'bg-primary text-white hover:bg-primary-hover shadow-primary/40' 
+                            ? 'btn-primary' 
                             : 'bg-white/10 backdrop-blur-md text-white border border-white/30 hover:bg-white/20 shadow-white/10'
                         }`}
                     >
@@ -146,12 +146,6 @@ export default function HeroSlider({ slides }: { slides: Slide[] }) {
         </>
       )}
 
-      <style jsx>{`
-        @keyframes progress {
-          from { width: 0%; }
-          to { width: 100%; }
-        }
-      `}</style>
     </section>
   );
 }
