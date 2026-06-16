@@ -40,7 +40,7 @@ export default function CategoryAccordion({ categories }: { categories: any[] })
         </p>
       </div>
 
-      <div className="page-wrapper h-[800px] md:h-[600px]">
+      <div className="w-full px-4 md:px-8 lg:px-12 h-[800px] md:h-[600px]">
         <div className="flex flex-col md:flex-row w-full h-full gap-4 transition-all duration-500 ease-in-out">
           {showcaseCategories.map((category, idx) => {
             const isHovered = hoveredIndex === idx;
