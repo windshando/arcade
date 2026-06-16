@@ -38,7 +38,7 @@ export default function LatestNews({ posts }: { posts: BlogPost[] }) {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {posts.slice(0, 3).map((post) => (
             <Link key={post.id} href={`/blog/${post.slug}`} className="group h-full flex flex-col">
-              <article className="glass-panel p-2 rounded-3xl h-full flex flex-col transition-all duration-300 hover:shadow-[0_0_40px_-10px_rgba(var(--primary),0.3)] hover:-translate-y-2 border border-card-border/50 bg-card-bg/50 backdrop-blur-md">
+              <article className="bg-card-bg p-2 rounded-3xl h-full flex flex-col transition-all duration-300 hover:shadow-xl hover:-translate-y-2 border border-card-border shadow-sm">
                 
                 {/* Image Wrapper */}
                 <div className="relative h-64 w-full rounded-2xl overflow-hidden mb-6 bg-card-border/20">
@@ -56,7 +56,7 @@ export default function LatestNews({ posts }: { posts: BlogPost[] }) {
                   )}
                   {post.category && (
                     <div className="absolute top-4 left-4">
-                      <span className="glass-panel px-3 py-1 text-xs font-bold tracking-wider uppercase rounded-full flex items-center gap-1.5 backdrop-blur-xl">
+                      <span className="bg-card-bg/90 backdrop-blur-xl px-3 py-1 text-xs font-bold tracking-wider uppercase rounded-full flex items-center gap-1.5 shadow-sm border border-card-border">
                         <Tag className="w-3 h-3" />
                         {post.category}
                       </span>

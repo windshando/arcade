@@ -26,7 +26,7 @@ export default function AdvantageGrid({ advantages }: { advantages: any[] }) {
             return (
               <div 
                 key={adv.id} 
-                className="group relative glass-panel p-8 rounded-3xl hover:-translate-y-2 transition-all duration-300 border border-card-border hover:border-primary/50 overflow-hidden"
+                className="group relative bg-card-bg p-8 rounded-3xl hover:-translate-y-2 transition-all duration-300 border border-card-border hover:border-primary/50 overflow-hidden shadow-sm hover:shadow-lg"
               >
                 {/* Glow effect on hover */}
                 <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />

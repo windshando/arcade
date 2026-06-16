@@ -444,9 +444,9 @@ body:has([data-admin])::after {
 }
 
 .glass-panel {
-  background-color: var(--surface-overlay);
+  background-color: var(--glass-bg);
   backdrop-filter: blur(12px);
-  border: 1px solid var(--border-subtle);
+  border: 1px solid var(--glass-border);
   box-shadow: var(--shadow-sm);
 }
 

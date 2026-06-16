@@ -44,7 +44,11 @@ export default function CategoryAccordion({ categories }: { categories: any[] })
         <div className="flex flex-col md:flex-row w-full h-full gap-4 transition-all duration-500 ease-in-out">
           {showcaseCategories.map((category, idx) => {
             const isHovered = hoveredIndex === idx;
-            const fallbackColor = idx === 0 ? 'from-[rgba(255,0,128,0.2)] to-black/80' : idx === 1 ? 'from-[rgba(0,255,255,0.2)] to-black/80' : 'from-[rgba(255,255,0,0.2)] to-black/80';
+            const gradientBg = idx === 0 
+              ? 'from-rose-200 via-pink-100 to-purple-200' 
+              : idx === 1 
+              ? 'from-cyan-200 via-teal-100 to-blue-200' 
+              : 'from-amber-200 via-yellow-100 to-lime-200';
             const icon = getFallbackIcon(category.slug);
 
             return (
@@ -57,9 +61,10 @@ export default function CategoryAccordion({ categories }: { categories: any[] })
                   isHovered ? 'h-[50%] md:h-auto md:w-[50%] shadow-[0_0_40px_rgba(var(--primary),0.2)]' : 'h-[25%] md:h-auto md:w-[25%] opacity-70 hover:opacity-100'
                 }`}
               >
-                {/* Background Representation */}
-                <div className={`absolute inset-0 bg-gradient-to-b ${fallbackColor} transition-opacity duration-500 z-10 hidden md:block`} />
-                <div className={`absolute inset-0 bg-gradient-to-t ${fallbackColor} transition-opacity duration-500 z-10 md:hidden`} />
+                {/* Background Gradient */}
+                <div className={`absolute inset-0 bg-gradient-to-br ${gradientBg} transition-opacity duration-500 z-0`} />
+                {/* Darken overlay for text readability when hovered */}
+                <div className={`absolute inset-0 z-[1] transition-opacity duration-500 ${isHovered ? 'bg-black/30' : 'bg-black/10'}`} />
 
                 {category.coverUrl ? (
                   <Image 
@@ -69,25 +74,22 @@ export default function CategoryAccordion({ categories }: { categories: any[] })
                     className={`object-cover transition-transform duration-1000 ${isHovered ? 'scale-110' : 'scale-100 grayscale-[50%]'}`} 
                   />
                 ) : (
-                  <div className={`absolute inset-0 bg-surface-elevated transition-transform duration-1000 ${isHovered ? 'scale-110' : 'scale-100'}`}>
-                    {/* Placeholder abstract grid for cyber feel */}
-                    <div className="absolute inset-0" style={{
-                      backgroundImage: 'linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px)',
+                  <div className={`absolute inset-0 bg-gradient-to-br ${gradientBg} transition-transform duration-1000 ${isHovered ? 'scale-110' : 'scale-100'}`}>
+                    {/* Subtle grid pattern */}
+                    <div className="absolute inset-0 opacity-[0.08]" style={{
+                      backgroundImage: 'linear-gradient(rgba(0, 0, 0, 0.15) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 0, 0, 0.15) 1px, transparent 1px)',
                       backgroundSize: '40px 40px',
-                      perspective: '1000px',
-                      transform: 'rotateX(60deg) scale(2)',
-                      transformOrigin: 'bottom'
                     }} />
                   </div>
                 )}
 
                 {/* Content Overlay */}
-                <div className="absolute inset-0 z-20 flex flex-col justify-end p-8">
+                <div className="absolute inset-0 z-[2] flex flex-col justify-end p-8">
                   <div className={`transition-all duration-700 transform ${isHovered ? 'translate-y-0 opacity-100' : 'translate-y-8 opacity-60'}`}>
                     <div className={`mb-4 transition-transform duration-700 ${isHovered ? 'scale-100' : 'scale-75 origin-bottom-left'}`}>
                       {icon}
                     </div>
-                    <h3 className={`font-extrabold uppercase tracking-tight transition-all duration-700 ${isHovered ? 'text-4xl text-on-dark' : 'text-2xl text-text-secondary'}`}>
+                    <h3 className={`font-extrabold uppercase tracking-tight transition-all duration-700 ${isHovered ? 'text-4xl text-white' : 'text-2xl text-foreground/80'}`}>
                       {category.name}
                     </h3>
                   </div>
