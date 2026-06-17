@@ -5,6 +5,11 @@ import { useTranslations } from 'next-intl';
 import { Link, usePathname } from '@/i18n/routing';
 import { Menu, X, ChevronDown } from 'lucide-react';
 
+const LOCALES = [
+  { code: 'en', label: 'English' },
+  { code: 'zh-CN', label: '中文' },
+];
+
 export default function HeaderClient({ links, locale }: { links: any[], locale: string }) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -117,14 +122,25 @@ export default function HeaderClient({ links, locale }: { links: any[], locale: 
           
           {/* Desktop Right Actions */}
           <div className="hidden md:flex items-center space-x-4">
-            <div className="flex items-center space-x-2 text-sm font-semibold">
-              <Link href={pathname} locale="en" className={`${locale === 'en' ? 'text-primary' : 'text-text-secondary hover:text-foreground'} transition-colors`}>
-                EN
-              </Link>
-              <span className="text-border-subtle">|</span>
-              <Link href={pathname} locale="zh-CN" className={`${locale === 'zh-CN' ? 'text-primary' : 'text-text-secondary hover:text-foreground'} transition-colors`}>
-                中文
-              </Link>
+            <div className="relative group">
+              <button className="flex items-center gap-1 text-sm font-semibold text-text-secondary hover:text-foreground transition-colors px-2 py-2 focus-visible">
+                {LOCALES.find(l => l.code === locale)?.label || 'Language'}
+                <ChevronDown className="w-4 h-4 group-hover:rotate-180 transition-transform" />
+              </button>
+              <div className="absolute right-0 mt-2 w-32 rounded-md shadow-lg bg-card-bg border border-card-border opacity-0 invisible translate-y-2 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 transition-all z-50">
+                <div className="py-1">
+                  {LOCALES.map((l) => (
+                    <Link
+                      key={l.code}
+                      href={pathname}
+                      locale={l.code}
+                      className={`block px-4 py-2 text-sm transition-colors ${locale === l.code ? 'text-primary font-medium bg-primary/5' : 'text-foreground hover:bg-primary/10 hover:text-primary'}`}
+                    >
+                      {l.label}
+                    </Link>
+                  ))}
+                </div>
+              </div>
             </div>
             <Link href="/contact" className="btn-primary">
               Get Quote
@@ -189,14 +205,29 @@ export default function HeaderClient({ links, locale }: { links: any[], locale: 
             ))}
             
             <div className="mt-8 pt-6 border-t border-card-border flex flex-col gap-4 px-3">
-              <div className="flex items-center space-x-4 text-base font-semibold">
-                <Link href={pathname} locale="en" className={`${locale === 'en' ? 'text-primary' : 'text-text-secondary'} py-2`}>
-                  EN
-                </Link>
-                <span className="text-border-subtle">|</span>
-                <Link href={pathname} locale="zh-CN" className={`${locale === 'zh-CN' ? 'text-primary' : 'text-text-secondary'} py-2`}>
-                  中文
-                </Link>
+              <div className="space-y-1">
+                <button
+                  onClick={() => toggleDropdown('lang')}
+                  className="w-full flex justify-between items-center py-4 text-base font-medium text-foreground border-b border-border-subtle focus-visible"
+                >
+                  Language ({LOCALES.find(l => l.code === locale)?.label || 'EN'})
+                  <ChevronDown className={`w-5 h-5 transition-transform ${openDropdown === 'lang' ? 'rotate-180' : ''}`} />
+                </button>
+                {openDropdown === 'lang' && (
+                  <div className="pl-4 py-2 space-y-1 bg-surface-elevated/50">
+                    {LOCALES.map((l) => (
+                      <Link
+                        key={l.code}
+                        href={pathname}
+                        locale={l.code}
+                        className={`block px-3 py-3 text-sm font-medium transition-colors border-b border-border-subtle last:border-0 ${locale === l.code ? 'text-primary' : 'text-text-secondary hover:text-primary'}`}
+                        onClick={() => setMobileMenuOpen(false)}
+                      >
+                        {l.label}
+                      </Link>
+                    ))}
+                  </div>
+                )}
               </div>
               <Link href="/contact" className="btn-primary w-full text-center mt-4">
                 Get Quote
