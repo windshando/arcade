@@ -1,5 +1,6 @@
 import React from 'react';
 import { fetchAdminAPI } from '@/lib/adminApi';
+import { sanitizeHtml } from '@/lib/sanitize';
 import { Link } from '@/i18n/routing';
 import { redirect } from 'next/navigation';
 import RichTextEditor from '@/components/RichTextEditor';
@@ -145,7 +146,7 @@ export default async function AdminCampaignEditPage({ params }: { params: Promis
             <div className="bg-background rounded-xl">
                {/* Note: since RichTextEditor is a client component, we override the actual hidden input for ReactQuill if locked. For simplicity, just rendering native if locked. */}
                {isLocked ? (
-                  <div className="p-4 border border-card-border rounded-xl bg-background text-sm opacity-80" dangerouslySetInnerHTML={{__html: campaign.bodyHtml}} />
+                  <div className="p-4 border border-card-border rounded-xl bg-background text-sm opacity-80" dangerouslySetInnerHTML={{__html: sanitizeHtml(campaign.bodyHtml)}} />
                ) : (
                   <RichTextEditor name="bodyHtml" placeholder="Design your newsletter visually..." defaultValue={campaign.bodyHtml} />
                )}

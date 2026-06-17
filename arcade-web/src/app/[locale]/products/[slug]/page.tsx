@@ -5,6 +5,7 @@ import ProductGallery from './ProductGallery';
 import DynamicPrice from '@/components/products/DynamicPrice';
 import SocialShare from '@/components/products/SocialShare';
 import RequestQuoteButton from '@/components/products/RequestQuoteButton';
+import { sanitizeHtml } from '@/lib/sanitize';
 
 export const revalidate = 60;
 
@@ -55,7 +56,7 @@ export default async function ProductDetailPage({
 
             <div 
               className="text-xl opacity-80 leading-relaxed font-light text-foreground space-y-4"
-              dangerouslySetInnerHTML={{ __html: product.description || '' }}
+              dangerouslySetInnerHTML={{ __html: sanitizeHtml(product.description || '') }}
             />
           </div>
 

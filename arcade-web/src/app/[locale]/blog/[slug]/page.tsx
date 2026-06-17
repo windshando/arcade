@@ -1,5 +1,6 @@
 import { getPublicPostDetail } from '@/lib/api';
 import { notFound } from 'next/navigation';
+import { sanitizeHtml } from '@/lib/sanitize';
 
 export const revalidate = 3600;
 
@@ -46,7 +47,7 @@ export default async function BlogDetailPage({
           className="prose prose-lg dark:prose-invert max-w-none 
           prose-headings:font-bold prose-headings:text-foreground
           prose-a:text-primary hover:prose-a:text-primary/80"
-          dangerouslySetInnerHTML={{ __html: post.content }} 
+          dangerouslySetInnerHTML={{ __html: sanitizeHtml(post.content) }} 
         />
       </article>
     </main>

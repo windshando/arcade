@@ -13,7 +13,16 @@ export class RecruitmentService {
     await this.verifyRecaptcha(data.recaptchaToken);
     
     // Remove the recaptchaToken from the payload before insertion
-    const { recaptchaToken, ...insertData } = data;
+    const insertData = {
+      firstName: data.firstName,
+      lastName: data.lastName,
+      email: data.email,
+      phone: data.phone,
+      position: data.position,
+      resumeMediaId: data.resumeMediaId,
+      message: data.message,
+      jobPostingId: data.jobPostingId,
+    };
     
     return this.prisma.jobApplication.create({
       data: {
@@ -43,7 +52,17 @@ export class RecruitmentService {
   async createFranchiseApplication(data: any, ipAddress: string, userAgent?: string) {
     await this.verifyRecaptcha(data.recaptchaToken);
     
-    const { recaptchaToken, ...insertData } = data;
+    const insertData = {
+      firstName: data.firstName,
+      lastName: data.lastName,
+      email: data.email,
+      phone: data.phone,
+      companyName: data.companyName,
+      countryCode: data.countryCode,
+      region: data.region,
+      investmentBudget: data.investmentBudget,
+      message: data.message,
+    };
     
     return this.prisma.franchiseApplication.create({
       data: {

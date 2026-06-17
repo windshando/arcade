@@ -3,6 +3,7 @@ import { Link } from '@/i18n/routing';
 import ProductActions from '@/components/products/ProductActions';
 import StickyCompareBar from '@/components/products/StickyCompareBar';
 import { Metadata } from 'next';
+import Image from 'next/image';
 
 export const revalidate = 60; // 1 minute
 
@@ -76,7 +77,15 @@ export default async function ProductsPage({
                   <div className="aspect-square bg-gray-200 relative overflow-hidden flex items-center justify-center">
                     {/* Placeholder for Media */}
                     {product.media.length > 0 ? (
-                      <div className="w-full h-full bg-cover bg-center" style={{ backgroundImage: `url(${product.media[0].url})` }} />
+                      <div className="w-full h-full relative">
+                        <Image 
+                          src={product.media[0].url}
+                          alt={product.name}
+                          fill
+                          className="object-cover"
+                          sizes="(max-width: 768px) 100vw, 33vw"
+                        />
+                      </div>
                     ) : (
                       <span className="text-text-tertiary font-medium tracking-widest text-sm">NO IMAGE</span>
                     )}

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from 'react';
+import Image from 'next/image';
 
 type MediaItem = { url: string; type: string; isPrimary: boolean };
 
@@ -33,10 +34,15 @@ export default function ProductGallery({ media }: { media: MediaItem[] }) {
             className="w-full h-full object-contain"
           />
         ) : (
-          <div 
-            className="w-full h-full bg-contain bg-center bg-no-repeat bg-card-bg/10" 
-            style={{ backgroundImage: `url(${activeMedia.url})` }} 
-          />
+          <div className="w-full h-full relative">
+            <Image 
+              src={activeMedia.url}
+              alt="Product Media"
+              fill
+              className="object-contain"
+              sizes="(max-width: 768px) 100vw, 50vw"
+            />
+          </div>
         )}
       </div>
 
@@ -60,10 +66,15 @@ export default function ProductGallery({ media }: { media: MediaItem[] }) {
                    <video src={item.url} className="w-full h-full object-cover opacity-50 pointer-events-none" />
                 </div>
               ) : (
-                <div 
-                  className="w-full h-full bg-cover bg-center" 
-                  style={{ backgroundImage: `url(${item.url})` }} 
-                />
+                <div className="w-full h-full relative">
+                  <Image 
+                    src={item.url}
+                    alt={`Thumbnail ${i}`}
+                    fill
+                    className="object-cover"
+                    sizes="80px"
+                  />
+                </div>
               )}
             </div>
           ))}

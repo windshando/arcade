@@ -1,5 +1,6 @@
 import { getPublicPage } from '@/lib/api';
 import { notFound } from 'next/navigation';
+import { sanitizeHtml } from '@/lib/sanitize';
 
 export const revalidate = 86400; // 24 hours
 
@@ -30,7 +31,7 @@ export default async function StaticRoutePage({
         <div 
           className="prose prose-lg dark:prose-invert max-w-none
           prose-headings:text-primary prose-a:text-primary hover:prose-a:text-primary/80"
-          dangerouslySetInnerHTML={{ __html: page.content }} 
+          dangerouslySetInnerHTML={{ __html: sanitizeHtml(page.content) }} 
         />
       </div>
     </main>

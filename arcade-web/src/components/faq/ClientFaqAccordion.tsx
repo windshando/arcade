@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { ChevronDown, ChevronUp, ThumbsUp, ThumbsDown } from 'lucide-react';
 import { voteFaq } from '@/lib/api';
+import { sanitizeHtml } from '@/lib/sanitize';
 
 export default function ClientFaqAccordion({ faq }: { faq: any }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -46,7 +47,7 @@ export default function ClientFaqAccordion({ faq }: { faq: any }) {
         <div className="px-5 pb-5 pt-2 border-t border-card-border/50 animate-slide-up">
           <div 
             className="text-foreground opacity-80 leading-relaxed font-light mb-6 whitespace-pre-wrap"
-            dangerouslySetInnerHTML={{ __html: faq.answer }}
+            dangerouslySetInnerHTML={{ __html: sanitizeHtml(faq.answer) }}
           />
 
           <div className="flex items-center gap-4 pt-4 border-t border-card-border/30">

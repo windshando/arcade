@@ -1,4 +1,5 @@
 import { getPublicProductDetail } from '@/lib/api';
+import Image from 'next/image';
 import { Link } from '@/i18n/routing';
 import { notFound } from 'next/navigation';
 
@@ -64,7 +65,15 @@ export default async function ComparePage({
                 <th key={p.id} className="p-4 border-b border-card-border/50 text-center w-64 align-top">
                   <div className="aspect-square bg-gray-100 rounded-xl overflow-hidden shadow-inner mb-4 relative flex items-center justify-center">
                     {p.media[0] ? (
-                      <div className="w-full h-full bg-cover bg-center" style={{ backgroundImage: `url(${p.media[0].url})` }} />
+                      <div className="w-full h-full relative">
+                        <Image 
+                          src={p.media[0].url}
+                          alt={p.name}
+                          fill
+                          className="object-cover"
+                          sizes="(max-width: 768px) 50vw, 33vw"
+                        />
+                      </div>
                     ) : (
                        <span className="text-xs opacity-50 font-bold tracking-widest">NO IMAGE</span>
                     )}

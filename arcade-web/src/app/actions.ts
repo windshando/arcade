@@ -55,12 +55,17 @@ export async function logoutAdmin() {
   cookieStore.delete('admin_token');
 }
 
+export async function getAdminToken() {
+  const cookieStore = await cookies();
+  return cookieStore.get('admin_token')?.value || null;
+}
+
 export async function updateLeadStatus(leadId: string, newStatus: string) {
   const cookieStore = await cookies();
   const token = cookieStore.get('admin_token')?.value;
   if (!token) throw new Error('Unauthorized');
 
-  await fetch(`${API_BASE_URL}/admin/crm/leads/${leadId}`, {
+  const res = await fetch(`${API_BASE_URL}/admin/crm/leads/${leadId}`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
@@ -68,6 +73,8 @@ export async function updateLeadStatus(leadId: string, newStatus: string) {
     },
     body: JSON.stringify({ status: newStatus })
   });
+  if (!res.ok) throw new Error('Failed to update lead status');
+  revalidatePath('/admin/crm');
 }
 
 export async function postLeadNote(leadId: string, formData: FormData) {
@@ -78,7 +85,7 @@ export async function postLeadNote(leadId: string, formData: FormData) {
   const notes = formData.get('notes');
   if (!notes) return;
 
-  await fetch(`${API_BASE_URL}/admin/crm/leads/${leadId}/notes`, {
+  const res = await fetch(`${API_BASE_URL}/admin/crm/leads/${leadId}/notes`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -86,6 +93,8 @@ export async function postLeadNote(leadId: string, formData: FormData) {
     },
     body: JSON.stringify({ notes })
   });
+  if (!res.ok) throw new Error('Failed to post lead note');
+  revalidatePath('/admin/crm');
 }
 
 export async function getDashboardStats() {

@@ -69,8 +69,8 @@ export class ProductsService {
       include: {
         category: true,
         translations: { where: { locale } },
-        specs: { where: { locale } },
-        customizationOptions: { where: { locale } },
+        specs: { where: { OR: [{ locale }, { locale: null }] } },
+        customizationOptions: { where: { OR: [{ locale }, { locale: null }] } },
         mediaItems: { include: { mediaFile: true } },
       },
     });
@@ -227,10 +227,11 @@ export class ProductsService {
             data: {
               productId: product.id,
               mediaFileId: mediaId,
-              sortOrder: sortOrder++,
-              isPrimary: sortOrder === 1, // First item is primary
+              sortOrder: sortOrder,
+              isPrimary: sortOrder === 0,
             }
           });
+          sortOrder++;
         }
       }
 
@@ -339,10 +340,11 @@ export class ProductsService {
             data: {
               productId: id,
               mediaFileId: mediaId,
-              sortOrder: sortOrder++,
-              isPrimary: sortOrder === 1,
+              sortOrder: sortOrder,
+              isPrimary: sortOrder === 0,
             }
           });
+          sortOrder++;
         }
       }
 

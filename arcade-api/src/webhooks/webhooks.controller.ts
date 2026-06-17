@@ -10,8 +10,7 @@ export class WebhooksController {
     @Body() body: any,
     @Headers('authorization') authHeader: string
   ) {
-    // TODO: Verify Mailgun signature or token here once configured securely.
-    // Example: if (authHeader !== `Bearer ${process.env.MAILGUN_SECRET}`) throw new UnauthorizedException();
+    // Signature verification is now handled in newsletterService.processWebhook
     
     return this.webhooksService.handleMailgunIncoming(body);
   }

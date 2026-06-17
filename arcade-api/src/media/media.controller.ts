@@ -1,4 +1,4 @@
-import { Controller, Post, Get, Param, UseInterceptors, UploadedFile, UseGuards, Req, Res, Headers, ForbiddenException, NotFoundException } from '@nestjs/common';
+import { Controller, Post, Get, Param, UseInterceptors, UploadedFile, UseGuards, Req, Res, Headers, ForbiddenException, NotFoundException, BadRequestException } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ConfigService } from '@nestjs/config';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
@@ -7,7 +7,7 @@ import { diskStorage } from 'multer';
 import { extname } from 'path';
 import type { Response } from 'express';
 import { createReadStream, existsSync } from 'fs';
-import { join } from 'path';
+import { join, resolve, extname } from 'path';
 
 // Define the root upload directory, ensuring it's relative to the project structure
 const UPLOADS_DIR = join(process.cwd(), process.env.UPLOAD_DIR || 'uploads');
@@ -23,6 +23,16 @@ export class MediaController {
   @Post('admin/upload')
   @UseInterceptors(FileInterceptor('file', {
     limits: { fileSize: 50 * 1024 * 1024 },
+    fileFilter: (req, file, cb) => {
+      const allowedMimeTypes = [
+        'image/jpeg', 'image/png', 'image/webp', 'image/gif', 'image/svg+xml',
+        'application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+      ];
+      if (!allowedMimeTypes.includes(file.mimetype)) {
+        return cb(new BadRequestException('Invalid file type'), false);
+      }
+      cb(null, true);
+    },
     storage: diskStorage({
       destination: UPLOADS_DIR,
       filename: (req, file, cb) => {
@@ -60,7 +70,14 @@ export class MediaController {
     }
 
     const filePath = join(UPLOADS_DIR, storageKey);
-    if (!existsSync(filePath)) {
+    const resolvedPath = resolve(filePath);
+    const resolvedUploadsDir = resolve(UPLOADS_DIR);
+    
+    if (!resolvedPath.startsWith(resolvedUploadsDir)) {
+      throw new ForbiddenException('Invalid file path');
+    }
+
+    if (!existsSync(resolvedPath)) {
       throw new NotFoundException('File not found');
     }
     
@@ -72,7 +89,7 @@ export class MediaController {
     // Cache static media files for 1 year in production
     res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
 
-    const fileStream = createReadStream(filePath);
+    const fileStream = createReadStream(resolvedPath);
     fileStream.pipe(res);
   }
 }
