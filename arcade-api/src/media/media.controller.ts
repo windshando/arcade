@@ -4,7 +4,6 @@ import { ConfigService } from '@nestjs/config';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { MediaService } from './media.service';
 import { diskStorage } from 'multer';
-import { extname } from 'path';
 import type { Response } from 'express';
 import { createReadStream, existsSync } from 'fs';
 import { join, resolve, extname } from 'path';
