@@ -48,7 +48,7 @@ export async function getPublicProductDetail(slug: string, locale: string) {
 }
 
 export async function getPublicCategories(locale: string) {
-  return fetchAPI(`/categories/public?locale=${locale}`, { cache: 'no-store' });
+  return fetchAPI(`/categories/public?locale=${locale}`, { next: { revalidate: 3600 } });
 }
 
 // Blog API Layer
@@ -103,8 +103,7 @@ export async function getPublicSlides(locale: string) {
 }
 
 export async function getPublicAdvantages(locale: string) {
-  // Use cache: no-store to ensure updates are visible to visitors
-  return fetchAPI(`/advantages/public?locale=${locale}`, { cache: 'no-store' });
+  return fetchAPI(`/advantages/public?locale=${locale}`, { next: { revalidate: 3600 } });
 }
 
 // Navigation API Layer

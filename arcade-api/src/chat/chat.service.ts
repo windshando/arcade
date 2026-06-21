@@ -7,7 +7,7 @@ export class ChatService {
 
   async startSession(ipAddress: string, deviceInfo: string) {
     let session = await this.prisma.chatSession.findFirst({
-      where: { deviceInfo, status: 'ACTIVE' },
+      where: { deviceInfo, ipAddress, status: 'ACTIVE' },
       include: { messages: { orderBy: { createdAt: 'asc' } } }
     });
 

@@ -1,5 +1,6 @@
 import { fetchAPI } from '@/lib/api';
 import { Link } from '@/i18n/routing';
+import { sanitizeHtml } from '@/lib/sanitize';
 
 export const revalidate = 60;
 
@@ -39,7 +40,7 @@ export default async function CareersPage({ params }: { params: Promise<{ locale
                   </div>
                 )}
               </div>
-              <div className="text-sm opacity-70 leading-relaxed max-w-3xl line-clamp-3" dangerouslySetInnerHTML={{ __html: job.translations?.[0]?.description || '' }} />
+              <div className="text-sm opacity-70 leading-relaxed max-w-3xl line-clamp-3" dangerouslySetInnerHTML={{ __html: sanitizeHtml(job.translations?.[0]?.description || '') }} />
               <span className="mt-6 text-primary font-bold text-sm tracking-wider uppercase flex items-center gap-2 group-hover:gap-4 transition-all">
                 View Details & Apply →
               </span>

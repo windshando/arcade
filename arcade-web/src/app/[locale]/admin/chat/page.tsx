@@ -3,6 +3,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { io, Socket } from "socket.io-client";
 import { User, Send, CircleDot, MessageCircle } from "lucide-react";
+import { getAdminToken } from "@/app/actions";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api/v1';
 const WS_URL = process.env.NEXT_PUBLIC_WS_URL || 'http://localhost:3001';
@@ -23,14 +24,16 @@ export default function AdminChatPage() {
   }, [selectedSessionId]);
 
   useEffect(() => {
-    fetch(`${API_BASE_URL}/admin/chat/sessions`, {
-      headers: { Authorization: `Bearer ${document.cookie.split('admin_token=')[1]?.split(';')[0] || ''}` }
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        setSessions(Array.isArray(data) ? data : []);
+    getAdminToken().then((token) => {
+      fetch(`${API_BASE_URL}/admin/chat/sessions`, {
+        headers: { Authorization: `Bearer ${token || ''}` }
       })
-      .catch(console.error);
+        .then((res) => res.json())
+        .then((data) => {
+          setSessions(Array.isArray(data) ? data : []);
+        })
+        .catch(console.error);
+    });
   }, []);
 
   useEffect(() => {
@@ -87,18 +90,20 @@ export default function AdminChatPage() {
   useEffect(() => {
     if (!selectedSessionId) return;
     
-    fetch(`${API_BASE_URL}/admin/chat/sessions/${selectedSessionId}/messages`, {
-      headers: { Authorization: `Bearer ${document.cookie.split('admin_token=')[1]?.split(';')[0] || ''}` }
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        setMessages(data || []);
+    getAdminToken().then((token) => {
+      fetch(`${API_BASE_URL}/admin/chat/sessions/${selectedSessionId}/messages`, {
+        headers: { Authorization: `Bearer ${token || ''}` }
       })
-      .catch(console.error);
-      
-    if (socket) {
-       socket.emit("joinAdmin", { sessionId: selectedSessionId });
-    }
+        .then((res) => res.json())
+        .then((data) => {
+          setMessages(data || []);
+        })
+        .catch(console.error);
+        
+      if (socket) {
+         socket.emit("joinAdmin", { sessionId: selectedSessionId });
+      }
+    });
   }, [selectedSessionId, socket]);
 
   useEffect(() => {

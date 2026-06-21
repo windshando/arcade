@@ -1,5 +1,6 @@
 import { PrismaClient, AdminRole, ContentStatus, LocaleCode, LeadStatus, InquiryType, ContactMethod } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
+import * as crypto from 'crypto';
 
 const prisma = new PrismaClient();
 
@@ -24,10 +25,15 @@ async function main() {
 
   // 2. Admin Users
   console.log('Seeding admin users...');
+  const defaultPassword = process.env.ADMIN_INITIAL_PASSWORD || crypto.randomBytes(8).toString('hex');
+  if (!process.env.ADMIN_INITIAL_PASSWORD) {
+    console.warn("WARNING: ADMIN_INITIAL_PASSWORD not set. Using generated random password.");
+    console.warn(`Generated Admin Password: ${defaultPassword}`);
+  }
   const admins = [
-    { email: "admin@example.com", password: "ChangeMe123!", role: "SUPER_ADMIN", displayName: "System Admin" },
-    { email: "sales@example.com", password: "ChangeMe123!", role: "SALES", displayName: "Sales Manager" },
-    { email: "editor@example.com", password: "ChangeMe123!", role: "EDITOR", displayName: "Content Editor" }
+    { email: "admin@example.com", password: defaultPassword, role: "SUPER_ADMIN", displayName: "System Admin" },
+    { email: "sales@example.com", password: defaultPassword, role: "SALES", displayName: "Sales Manager" },
+    { email: "editor@example.com", password: defaultPassword, role: "EDITOR", displayName: "Content Editor" }
   ];
   for (const a of admins) {
     const passwordHash = await bcrypt.hash(a.password, 10);

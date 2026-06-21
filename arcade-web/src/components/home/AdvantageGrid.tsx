@@ -1,5 +1,8 @@
-import * as LucideIcons from 'lucide-react';
-import { Star } from 'lucide-react';
+import { Star, Shield, Zap, Wrench, Globe, Truck, Cpu, Rocket, Clock, Heart, ThumbsUp, Trophy, Headset, Banknote, ShieldCheck } from 'lucide-react';
+
+const iconMap: Record<string, any> = {
+  Star, Shield, Zap, Wrench, Globe, Truck, Cpu, Rocket, Clock, Heart, ThumbsUp, Trophy, Headset, Banknote, ShieldCheck
+};
 
 export default function AdvantageGrid({ advantages }: { advantages: any[] }) {
   if (!advantages || advantages.length === 0) return null;
@@ -21,7 +24,7 @@ export default function AdvantageGrid({ advantages }: { advantages: any[] }) {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
           {advantages.map((adv) => {
-            const IconComponent = (LucideIcons as any)[adv.iconName] || Star;
+            const IconComponent = iconMap[adv.iconName] || Star;
 
             return (
               <div 

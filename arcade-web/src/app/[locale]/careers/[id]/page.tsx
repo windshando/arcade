@@ -1,5 +1,6 @@
 import { fetchAPI } from '@/lib/api';
 import { notFound } from 'next/navigation';
+import { sanitizeHtml } from '@/lib/sanitize';
 import ApplyButton from './ApplyButton';
 
 export const revalidate = 60;
@@ -50,7 +51,7 @@ export default async function JobDetailPage({ params }: { params: Promise<{ loca
           <h2 className="text-2xl font-bold mb-6">Job Description</h2>
           <div
             className="prose prose-invert max-w-none opacity-85 leading-relaxed space-y-4"
-            dangerouslySetInnerHTML={{ __html: t.description }}
+            dangerouslySetInnerHTML={{ __html: sanitizeHtml(t.description) }}
           />
         </section>
       )}
@@ -60,7 +61,7 @@ export default async function JobDetailPage({ params }: { params: Promise<{ loca
           <h2 className="text-2xl font-bold mb-6">Requirements & Qualifications</h2>
           <div
             className="prose prose-invert max-w-none opacity-85 leading-relaxed space-y-4"
-            dangerouslySetInnerHTML={{ __html: t.requirements }}
+            dangerouslySetInnerHTML={{ __html: sanitizeHtml(t.requirements) }}
           />
         </section>
       )}

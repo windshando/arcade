@@ -1,10 +1,11 @@
 'use client';
 
 import Script from 'next/script';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 
 export default function RecaptchaField({ siteKey, onChange }: { siteKey?: string, onChange: (token: string) => void }) {
-  const containerId = "recaptcha-container-" + Math.random().toString(36).substr(2, 9);
+  const containerIdRef = useRef("recaptcha-container-" + Math.random().toString(36).substr(2, 9));
+  const containerId = containerIdRef.current;
 
   useEffect(() => {
     const initRecaptcha = () => {

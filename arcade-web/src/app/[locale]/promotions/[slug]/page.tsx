@@ -2,6 +2,7 @@ import React from 'react';
 import { getPublicPromotion } from '@/lib/api';
 import { notFound } from 'next/navigation';
 import { Link } from '@/i18n/routing';
+import { sanitizeHtml } from '@/lib/sanitize';
 import PromotionTracker from './PromotionTracker'; // Client component
 
 export default async function PublicPromotionPage({ params }: { params: Promise<{ slug: string }> }) {
@@ -31,7 +32,7 @@ export default async function PublicPromotionPage({ params }: { params: Promise<
         </h1>
 
         <div className="prose prose-invert prose-lg max-w-none text-left bg-background/30 p-8 rounded-2xl border border-card-border shadow-inner" 
-             dangerouslySetInnerHTML={{ __html: promotion.bodyHtml || '<p>No content provided.</p>' }} 
+             dangerouslySetInnerHTML={{ __html: sanitizeHtml(promotion.bodyHtml || '<p>No content provided.</p>') }} 
         />
         
         <div className="pt-8 flex justify-center gap-6">

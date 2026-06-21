@@ -1,4 +1,5 @@
-import { Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import * as crypto from 'crypto';
 import { PrismaService } from '../prisma/prisma.service';
 import { Cron, CronExpression } from '@nestjs/schedule';
 
@@ -223,6 +224,19 @@ export class NewsletterService {
     if (!payload || !payload['event-data']) return { status: 'ignored' };
     
     // Validate signature securely here in production...
+    const settings = await this.getMailgunSettings() as any;
+    const webhookKey = process.env.MAILGUN_WEBHOOK_SECRET || settings.apiKey;
+    if (webhookKey && payload.signature) {
+      const { timestamp, token, signature } = payload.signature;
+      const encodedToken = crypto
+        .createHmac('sha256', webhookKey)
+        .update(timestamp.concat(token))
+        .digest('hex');
+      
+      if (encodedToken !== signature) {
+         throw new UnauthorizedException('Invalid Mailgun signature');
+      }
+    }
     
     const eventData = payload['event-data'];
     const event = eventData.event;

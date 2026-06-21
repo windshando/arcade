@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+import Image from 'next/image';
 import { useProductStore } from '@/components/products/ProductStoreProvider';
 import { getPublicProducts } from '@/lib/api';
 import { Link } from '@/i18n/routing';
@@ -59,7 +60,15 @@ export default function WishlistPage() {
               <Link href={`/products/${product.slug}`} className="glass-panel rounded-2xl overflow-hidden h-full flex flex-col relative border border-card-border/50 hover:border-danger/50">
                 <div className="aspect-square bg-surface-elevated flex items-center justify-center overflow-hidden">
                   {product.media[0] ? (
-                    <div className="w-full h-full bg-cover bg-center" style={{ backgroundImage: `url(${product.media[0].url})` }} />
+                    <div className="w-full h-full relative">
+                      <Image 
+                        src={product.media[0].url}
+                        alt={product.name}
+                        fill
+                        className="object-cover"
+                        sizes="(max-width: 768px) 100vw, 33vw"
+                      />
+                    </div>
                   ) : (
                     <span className="text-text-tertiary font-medium tracking-widest text-xs">NO IMAGE</span>
                   )}
