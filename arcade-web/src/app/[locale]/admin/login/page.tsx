@@ -18,7 +18,7 @@ export default function AdminLoginPage() {
   }, [state, router]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 animate-fade-in" style={{ background: '#f8f9fb', fontFamily: "'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" }}>
+    <div className="p-6 md:p-8 w-full max-w-[1600px] mx-auto animate-fade-in space-y-6" style={{ background: '#f8f9fb', fontFamily: "'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif" }}>
       <div className="w-full max-w-md p-10 rounded-2xl shadow-lg" style={{ background: '#ffffff', border: '1px solid #e2e8f0' }}>
         <div className="text-center mb-8">
           <h1 className="text-2xl font-bold tracking-tight" style={{ color: '#1e293b' }}>

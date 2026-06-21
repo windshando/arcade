@@ -8,7 +8,7 @@ export default async function NewProductPage() {
   const categories = await fetchAdminAPI('/categories/admin');
 
   return (
-    <div className="p-8 animate-fade-in pb-32 max-w-5xl mx-auto">
+    <div className="p-6 md:p-8 w-full max-w-[1600px] mx-auto animate-fade-in space-y-6">
       <div className="mb-6">
         <Link href="/admin/products" className="text-primary hover:underline font-bold text-sm inline-flex items-center gap-2">
           ← Back to Catalog

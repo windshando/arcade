@@ -23,7 +23,7 @@ export default async function AdminFaqCategoryEditPage({ params }: { params: Pro
   const category = await fetchAdminAPI(`/faq/admin/category/${resolvedParams.id}`);
 
   return (
-    <div className="p-8 max-w-3xl mx-auto">
+    <div className="p-6 md:p-8 w-full max-w-[1600px] mx-auto animate-fade-in space-y-6">
       <div className="mb-8">
         <Link href="/admin/faq-categories" className="text-primary text-sm hover:underline font-bold mb-4 inline-block">
           ← Back to Categories

@@ -11,7 +11,7 @@ export default async function EditPostingWrapper({ params }: { params: Promise<{
   }
 
   return (
-    <div className="p-8 max-w-5xl mx-auto">
+    <div className="p-6 md:p-8 w-full max-w-[1600px] mx-auto animate-fade-in space-y-6">
       <div className="mb-6">
         <h1 className="text-3xl font-extrabold text-foreground mb-2">
           {posting ? 'Edit Job Posting' : 'Create Job Posting'}

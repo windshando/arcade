@@ -120,7 +120,7 @@ export default function AdminChatPage() {
   const selectedSession = sessions.find(s => s.id === selectedSessionId);
 
   return (
-    <div className="flex h-full bg-slate-50 font-sans">
+    <div className="p-6 md:p-8 w-full max-w-[1600px] mx-auto animate-fade-in space-y-6">
       <div className="w-1/3 border-r border-slate-200 bg-white flex flex-col">
         <div className="p-5 border-b border-slate-100 flex flex-col bg-white z-10 gap-3">
           <div className="flex justify-between items-center">

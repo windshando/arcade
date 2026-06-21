@@ -13,7 +13,7 @@ export default async function RecruitmentDashboardPage({ params }: { params: Pro
   const postings = await fetchAdminAPI('/recruitment/admin/postings').catch(() => []);
 
   return (
-    <div className="p-8 animate-fade-in max-w-6xl mx-auto space-y-12">
+    <div className="p-6 md:p-8 w-full max-w-[1600px] mx-auto animate-fade-in space-y-6">
       <div className="mb-8 flex justify-between items-center">
         <div>
           <h1 className="text-3xl font-bold text-foreground">{t('title')}</h1>

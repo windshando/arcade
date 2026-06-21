@@ -13,7 +13,7 @@ export default async function EditProductPage({ params }: { params: Promise<{ id
   ]);
 
   return (
-    <div className="p-8 animate-fade-in max-w-4xl mx-auto pb-32">
+    <div className="p-6 md:p-8 w-full max-w-[1600px] mx-auto animate-fade-in space-y-6">
       <div className="mb-8">
         <Link href="/admin/products" className="text-primary font-bold text-sm hover:underline mb-4 inline-block">
           ← Back to Catalog

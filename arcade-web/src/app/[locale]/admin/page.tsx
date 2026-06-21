@@ -14,7 +14,7 @@ export default async function AdminDashboardPage() {
 
   if (!stats) {
     return (
-      <div className="p-8 h-full flex flex-col items-center justify-center">
+      <div className="p-6 md:p-8 w-full max-w-[1600px] mx-auto animate-fade-in space-y-6">
         <div className="bg-red-500/10 border border-red-500 text-red-500 p-6 rounded-xl flex flex-col items-center max-w-md text-center">
           <Activity size={48} className="mb-4 opacity-50" />
           <h2 className="text-xl font-bold mb-2">{t('loadFailTitle')}</h2>

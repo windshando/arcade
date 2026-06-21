@@ -23,7 +23,7 @@ export default async function AdminBlogEditPage({
   } catch (e) {}
 
   return (
-    <div className="p-8 animate-fade-in max-w-5xl mx-auto">
+    <div className="p-6 md:p-8 w-full max-w-[1600px] mx-auto animate-fade-in space-y-6">
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-foreground">
           {id === 'new' ? 'Create Blog Post' : 'Edit Blog Post'}

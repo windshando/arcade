@@ -61,7 +61,7 @@ export default async function LeadDetailPage({ params }: { params: Promise<{ id:
   timelineEvents.sort((a, b) => b.date.getTime() - a.date.getTime());
 
   return (
-    <div className="p-8 max-w-6xl mx-auto animate-fade-in pb-32">
+    <div className="p-6 md:p-8 w-full max-w-[1600px] mx-auto animate-fade-in space-y-6">
       <div className="mb-6 flex justify-between items-center">
         <Link href="/admin/leads" className="text-primary hover:underline font-bold text-sm inline-flex items-center gap-2">
           ← Back to CRM Inbox

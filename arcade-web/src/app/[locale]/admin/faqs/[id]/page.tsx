@@ -47,7 +47,7 @@ export default async function AdminFaqEditPage({ params }: { params: Promise<{ i
   }
 
   return (
-    <div className="p-8 max-w-4xl mx-auto mb-20">
+    <div className="p-6 md:p-8 w-full max-w-[1600px] mx-auto animate-fade-in space-y-6">
       <div className="mb-8">
         <Link href="/admin/faqs" className="text-primary text-sm hover:underline font-bold mb-4 inline-block">
           ← Back to Questions

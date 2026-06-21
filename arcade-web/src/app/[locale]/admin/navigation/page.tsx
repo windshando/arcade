@@ -7,7 +7,7 @@ export default async function NavigationAdminPage() {
   const menus = await getAdminNavigations().catch(() => []);
 
   return (
-    <div className="space-y-6">
+    <div className="p-6 md:p-8 w-full max-w-[1600px] mx-auto animate-fade-in space-y-6">
       <div className="flex justify-between items-end">
         <div>
           <h1 className="text-3xl font-bold tracking-tight mb-2">Navigation Routing</h1>

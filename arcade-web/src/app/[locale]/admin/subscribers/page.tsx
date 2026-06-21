@@ -7,7 +7,7 @@ export default async function AdminSubscribersPage() {
   const subscribers = await fetchAdminAPI('/newsletter/admin/subscribers');
 
   return (
-    <div className="p-8 max-w-5xl mx-auto">
+    <div className="p-6 md:p-8 w-full max-w-[1600px] mx-auto animate-fade-in space-y-6">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-4">
         <div>
           <h1 className="text-3xl font-extrabold text-foreground mb-2">{t('title')}</h1>

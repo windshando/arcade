@@ -11,7 +11,7 @@ export default async function LeadQuotePdfPage({ params }: { params: Promise<{ i
   const validUntil = new Date(d.setDate(d.getDate() + 30)).toLocaleDateString(); // 30 Day validity
   
   return (
-    <div className="bg-white text-black min-h-screen font-sans print:p-0 print:bg-white print:m-0 w-full overflow-x-hidden">
+    <div className="p-6 md:p-8 w-full max-w-[1600px] mx-auto animate-fade-in space-y-6">
       
       {/* Hide the top panel when printing */}
       <div className="p-4 bg-gray-100 print:hidden flex justify-between items-center print-hide border-b shadow-sm mb-8">
