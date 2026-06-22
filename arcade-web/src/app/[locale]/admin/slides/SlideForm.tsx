@@ -1,11 +1,19 @@
 "use client";
 
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { useRouter } from '@/i18n/routing';
 import { uploadMediaFile, createSlide, updateSlide } from '@/app/actions';
-import { Layout, Image as ImageIcon, Type, Link as LinkIcon, Palette, Eye } from 'lucide-react';
+import { Image as ImageIcon, Type, Palette, Eye, Globe } from 'lucide-react';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api/v1';
+
+const LOCALES = ['EN', 'ZH_CN'] as const;
+const LOCALE_LABELS: Record<string, string> = {
+  EN: 'EN',
+  ZH_CN: '中文',
+  JA: '日本語',
+  AR: 'العربية',
+};
 
 interface SlideFormProps {
   initialData?: any;
@@ -17,6 +25,7 @@ export default function SlideForm({ initialData, isEditing }: SlideFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [uploadingField, setUploadingField] = useState<string | null>(null);
   const [error, setError] = useState('');
+  const [activeLocale, setActiveLocale] = useState<string>('EN');
 
   const [formData, setFormData] = useState({
     status: initialData?.status || 'DRAFT',
@@ -24,12 +33,22 @@ export default function SlideForm({ initialData, isEditing }: SlideFormProps) {
     layoutStyle: initialData?.layoutStyle || 'LEFT_TEXT',
     buttonStyle: initialData?.buttonStyle || 'LIGHT',
     sortOrder: initialData?.sortOrder || 0,
-    title: initialData?.translations?.[0]?.title || '',
-    subtitle: initialData?.translations?.[0]?.subtitle || '',
-    ctaText: initialData?.translations?.[0]?.ctaText || 'Learn More',
     desktopMediaId: initialData?.desktopMediaId || '',
     mobileMediaId: initialData?.mobileMediaId || '',
   });
+
+  // Initialize per-locale translations from initialData
+  const [translations, setTranslations] = useState(
+    LOCALES.map(loc => {
+      const existing = initialData?.translations?.find((t: any) => t.locale === loc);
+      return {
+        locale: loc,
+        title: existing?.title || '',
+        subtitle: existing?.subtitle || '',
+        ctaText: existing?.ctaText || (loc === 'EN' ? 'Learn More' : ''),
+      };
+    })
+  );
 
   const [previews, setPreviews] = useState({
     desktop: initialData?.desktopMedia ? `${API_BASE_URL}/media/public/${initialData.desktopMedia.storageKey}` : '',
@@ -40,6 +59,14 @@ export default function SlideForm({ initialData, isEditing }: SlideFormProps) {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
+
+  const handleUpdateTranslation = (field: string, value: string) => {
+    setTranslations(prev => prev.map(t =>
+      t.locale === activeLocale ? { ...t, [field]: value } : t
+    ));
+  };
+
+  const getActiveT = () => translations.find(t => t.locale === activeLocale) || translations[0];
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>, field: 'desktopMediaId' | 'mobileMediaId') => {
     if (!e.target.files?.length) return;
@@ -77,16 +104,7 @@ export default function SlideForm({ initialData, isEditing }: SlideFormProps) {
       sortOrder: parseInt(formData.sortOrder.toString()),
       desktopMediaId: formData.desktopMediaId || null,
       mobileMediaId: formData.mobileMediaId || null,
-      translations: [
-        {
-          locale: 'EN',
-          title: formData.title,
-          subtitle: formData.subtitle,
-          ctaText: formData.ctaText,
-        },
-        // In a real app, I'd add ZH_CN etc. here or handle them in the UI
-        { locale: 'ZH_CN', title: `[ZH] ${formData.title}`, subtitle: `[ZH] ${formData.subtitle}`, ctaText: `[ZH] ${formData.ctaText}` }
-      ]
+      translations: translations.filter(t => t.title || t.subtitle || t.ctaText),
     };
 
     try {
@@ -102,6 +120,8 @@ export default function SlideForm({ initialData, isEditing }: SlideFormProps) {
       setIsSubmitting(false);
     }
   };
+
+  const activeT = getActiveT();
 
   return (
     <form onSubmit={handleSubmit} className="space-y-8 max-w-5xl">
@@ -160,19 +180,53 @@ export default function SlideForm({ initialData, isEditing }: SlideFormProps) {
 
           <div className="glass-panel p-6 rounded-2xl">
              <h3 className="flex items-center gap-2 font-bold text-lg mb-6"><Type size={20} className="text-primary" /> Component Text</h3>
+
+             {/* Locale Tabs */}
+             <div className="flex items-center gap-2 mb-6 border-b border-card-border pb-4">
+               <Globe size={16} className="opacity-50" />
+               {LOCALES.map(loc => (
+                 <button
+                   key={loc}
+                   type="button"
+                   onClick={() => setActiveLocale(loc)}
+                   className={`px-5 py-2 rounded-lg text-sm font-bold transition-all ${
+                     activeLocale === loc ? 'bg-primary text-primary-foreground shadow-md' : 'bg-card-border/50 opacity-70 hover:opacity-100'
+                   }`}
+                 >
+                   {LOCALE_LABELS[loc] || loc}
+                 </button>
+               ))}
+             </div>
+
              <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-bold opacity-70 mb-1">Headline (Title)</label>
-                  <input required name="title" value={formData.title} onChange={handleChange} className="w-full bg-card-bg border border-card-border p-3 rounded-xl text-lg font-bold" placeholder="READY FOR WINNING?" />
+                  <label className="block text-sm font-bold opacity-70 mb-1">Headline (Title) — {LOCALE_LABELS[activeLocale]}</label>
+                  <input
+                    required={activeLocale === 'EN'}
+                    value={activeT.title}
+                    onChange={(e) => handleUpdateTranslation('title', e.target.value)}
+                    className="w-full bg-card-bg border border-card-border p-3 rounded-xl text-lg font-bold"
+                    placeholder={activeLocale === 'EN' ? 'READY FOR WINNING?' : `Enter ${LOCALE_LABELS[activeLocale]} title`}
+                  />
                 </div>
                 <div>
-                  <label className="block text-sm font-bold opacity-70 mb-1">Sub-headline (Description)</label>
-                  <textarea name="subtitle" value={formData.subtitle} onChange={handleChange} className="w-full bg-card-bg border border-card-border p-3 rounded-xl h-24" placeholder="High-performance arcade machines for your venue." />
+                  <label className="block text-sm font-bold opacity-70 mb-1">Sub-headline (Description) — {LOCALE_LABELS[activeLocale]}</label>
+                  <textarea
+                    value={activeT.subtitle}
+                    onChange={(e) => handleUpdateTranslation('subtitle', e.target.value)}
+                    className="w-full bg-card-bg border border-card-border p-3 rounded-xl h-24"
+                    placeholder={activeLocale === 'EN' ? 'High-performance arcade machines for your venue.' : `Enter ${LOCALE_LABELS[activeLocale]} description`}
+                  />
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-sm font-bold opacity-70 mb-1">Call to Action Button</label>
-                    <input name="ctaText" value={formData.ctaText} onChange={handleChange} className="w-full bg-card-bg border border-card-border p-3 rounded-xl" placeholder="GET STARTED" />
+                    <label className="block text-sm font-bold opacity-70 mb-1">CTA Button — {LOCALE_LABELS[activeLocale]}</label>
+                    <input
+                      value={activeT.ctaText}
+                      onChange={(e) => handleUpdateTranslation('ctaText', e.target.value)}
+                      className="w-full bg-card-bg border border-card-border p-3 rounded-xl"
+                      placeholder={activeLocale === 'EN' ? 'GET STARTED' : `Enter ${LOCALE_LABELS[activeLocale]} button text`}
+                    />
                   </div>
                   <div>
                     <label className="block text-sm font-bold opacity-70 mb-1">Destination URL</label>
