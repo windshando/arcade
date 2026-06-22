@@ -99,7 +99,27 @@ export async function getPublicPromotion(slug: string) {
 }
 
 export async function getPublicSlides(locale: string) {
-  return fetchAPI(`/slides/public?locale=${locale}`, { next: { revalidate: 3600 } });
+  const slides = await fetchAPI(`/slides/public?locale=${locale}`, { next: { revalidate: 3600 } });
+  if (!Array.isArray(slides)) return [];
+
+  // Normalize image URLs to use the frontend's known API base URL.
+  // The backend may use a different API_BASE_URL (e.g., internal Railway URL),
+  // which won't match Next.js Image remotePatterns or be reachable from the browser.
+  return slides.map((slide: any) => ({
+    ...slide,
+    desktopImageUrl: normalizeMediaUrl(slide.desktopImageUrl),
+    mobileImageUrl: normalizeMediaUrl(slide.mobileImageUrl),
+  }));
+}
+
+/** Re-writes a media URL to use the frontend's NEXT_PUBLIC_API_URL base. */
+function normalizeMediaUrl(url: string | null): string | null {
+  if (!url) return null;
+  const mediaPath = url.match(/\/media\/public\/.+$/);
+  if (mediaPath) {
+    return `${API_BASE_URL}${mediaPath[0]}`;
+  }
+  return url;
 }
 
 export async function getPublicAdvantages(locale: string) {
