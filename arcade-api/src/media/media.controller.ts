@@ -5,11 +5,16 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { MediaService } from './media.service';
 import { diskStorage } from 'multer';
 import type { Response } from 'express';
-import { createReadStream, existsSync } from 'fs';
+import { createReadStream, existsSync, mkdirSync } from 'fs';
 import { join, resolve, extname } from 'path';
 
 // Define the root upload directory, ensuring it's relative to the project structure
 const UPLOADS_DIR = join(process.cwd(), process.env.UPLOAD_DIR || 'uploads');
+
+// Ensure the uploads directory exists (multer diskStorage does NOT create it automatically)
+if (!existsSync(UPLOADS_DIR)) {
+  mkdirSync(UPLOADS_DIR, { recursive: true });
+}
 
 @Controller('media')
 export class MediaController {
