@@ -139,7 +139,7 @@ export default function SlideForm({ initialData, isEditing }: SlideFormProps) {
                 <label className="block text-sm font-bold opacity-70 mb-3">Desktop Background (1920x800+)</label>
                 <div className="relative aspect-[16/7] bg-slate-900 rounded-xl overflow-hidden border border-card-border group">
                   {previews.desktop ? (
-                    <img src={previews.desktop} className="w-full h-full object-cover" alt="" />
+                    <img src={previews.desktop} className="w-full h-full object-cover" alt="" onError={() => setPreviews(p => ({ ...p, desktop: '' }))} />
                   ) : (
                     <div className="w-full h-full flex flex-col items-center justify-center text-white/20 gap-2">
                        <ImageIcon size={40} />
@@ -160,7 +160,7 @@ export default function SlideForm({ initialData, isEditing }: SlideFormProps) {
                 <label className="block text-sm font-bold opacity-70 mb-3">Mobile Background (Optional)</label>
                 <div className="relative aspect-[9/16] h-[250px] mx-auto bg-slate-900 rounded-xl overflow-hidden border border-card-border group">
                    {previews.mobile ? (
-                    <img src={previews.mobile} className="w-full h-full object-cover" alt="" />
+                    <img src={previews.mobile} className="w-full h-full object-cover" alt="" onError={() => setPreviews(p => ({ ...p, mobile: '' }))} />
                   ) : (
                     <div className="w-full h-full flex flex-col items-center justify-center text-white/20 gap-2 text-center px-4">
                        <ImageIcon size={32} />

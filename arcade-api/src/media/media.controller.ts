@@ -73,10 +73,10 @@ export class MediaController {
       try {
         const url = new URL(source);
         if (!allowedDomains.has(url.hostname)) {
-          throw new ForbiddenException('Hotlinking is not allowed');
+          // Return 403 with no body to avoid ORB blocking JSON in <img> context
+          return res.status(403).end();
         }
       } catch (e) {
-        if (e instanceof ForbiddenException) throw e;
         // if URL parsing fails, allow the request (direct browser access)
       }
     }
@@ -86,11 +86,11 @@ export class MediaController {
     const resolvedUploadsDir = resolve(UPLOADS_DIR);
     
     if (!resolvedPath.startsWith(resolvedUploadsDir)) {
-      throw new ForbiddenException('Invalid file path');
+      return res.status(403).end();
     }
 
     if (!existsSync(resolvedPath)) {
-      throw new NotFoundException('File not found');
+      return res.status(404).end();
     }
     
     // We can also retrieve the mimeType from DB for correct content-type header
