@@ -56,15 +56,23 @@ export class MediaController {
     @Headers('referer') referer?: string,
     @Headers('origin') origin?: string,
   ) {
-    // Hotlink Protection
+    // Hotlink Protection — allow domains from both ALLOWED_DOMAINS and CORS_ORIGIN
     const allowedDomainsStr = this.configService.get<string>('ALLOWED_DOMAINS') || 'localhost,127.0.0.1';
-    const allowedDomains = allowedDomainsStr.split(',').map(d => d.trim());
+    const corsOriginStr = this.configService.get<string>('CORS_ORIGIN') || '';
+    const allowedDomains = new Set(
+      [...allowedDomainsStr.split(','), ...corsOriginStr.split(',')]
+        .map(d => {
+          // Handle both plain domains and full URLs (e.g. "https://example.com")
+          try { return new URL(d.trim()).hostname; } catch { return d.trim(); }
+        })
+        .filter(Boolean)
+    );
 
     if (referer || origin) {
       const source = referer || origin || '';
       try {
         const url = new URL(source);
-        if (!allowedDomains.includes(url.hostname)) {
+        if (!allowedDomains.has(url.hostname)) {
           throw new ForbiddenException('Hotlinking is not allowed');
         }
       } catch (e) {
