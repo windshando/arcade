@@ -56,27 +56,35 @@ export class MediaController {
     @Headers('referer') referer?: string,
     @Headers('origin') origin?: string,
   ) {
-    // Hotlink Protection — allow domains from both ALLOWED_DOMAINS and CORS_ORIGIN
-    const allowedDomainsStr = this.configService.get<string>('ALLOWED_DOMAINS') || 'localhost,127.0.0.1';
-    const corsOriginStr = this.configService.get<string>('CORS_ORIGIN') || '';
-    const allowedDomains = new Set(
-      [...allowedDomainsStr.split(','), ...corsOriginStr.split(',')]
-        .map(d => {
-          // Handle both plain domains and full URLs (e.g. "https://example.com")
-          try { return new URL(d.trim()).hostname; } catch { return d.trim(); }
-        })
-        .filter(Boolean)
-    );
+    // Hotlink Protection — build allow-list from all known domain sources
+    const extractHostnames = (str: string): string[] =>
+      str.split(',').map(d => {
+        try { return new URL(d.trim()).hostname; } catch { return d.trim(); }
+      }).filter(Boolean);
 
-    if (referer || origin) {
+    const allowedDomainsEnv = process.env.ALLOWED_DOMAINS || '';
+    const corsOriginEnv = process.env.CORS_ORIGIN || '';
+    const apiBaseUrlEnv = process.env.API_BASE_URL || '';
+
+    // Merge all known domain sources
+    const allSources = [allowedDomainsEnv, corsOriginEnv, apiBaseUrlEnv].filter(Boolean);
+
+    // If no domains are explicitly configured, skip hotlink protection entirely
+    if (allSources.length > 0 && (referer || origin)) {
+      const allowedDomains = new Set([
+        ...extractHostnames(allowedDomainsEnv),
+        ...extractHostnames(corsOriginEnv),
+        ...extractHostnames(apiBaseUrlEnv),
+        'localhost', '127.0.0.1',
+      ]);
+
       const source = referer || origin || '';
       try {
         const url = new URL(source);
         if (!allowedDomains.has(url.hostname)) {
-          // Return 403 with no body to avoid ORB blocking JSON in <img> context
           return res.status(403).end();
         }
-      } catch (e) {
+      } catch {
         // if URL parsing fails, allow the request (direct browser access)
       }
     }
