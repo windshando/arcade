@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import Image from 'next/image';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 interface Slide {
@@ -51,25 +50,25 @@ export default function HeroSlider({ slides }: { slides: Slide[] }) {
           <div className="absolute inset-0 w-full h-full overflow-hidden">
              {/* Desktop Image */}
              <div className="hidden md:block w-full h-full relative">
-                <Image
-                    src={slide.desktopImageUrl || '/placeholder.jpg'}
+                {slide.desktopImageUrl && (
+                  <img
+                    src={slide.desktopImageUrl}
                     alt={slide.title}
-                    fill
-                    priority={idx === 0}
-                    className={`object-cover object-center transition-transform duration-[6000ms] ease-linear ${
+                    className={`absolute inset-0 w-full h-full object-cover object-center transition-transform duration-[6000ms] ease-linear ${
                         idx === current ? 'scale-110' : 'scale-100'
                     }`}
-                />
+                  />
+                )}
              </div>
              {/* Mobile Image */}
              <div className="block md:hidden w-full h-full relative">
-                <Image
-                    src={slide.mobileImageUrl || slide.desktopImageUrl || '/placeholder.jpg'}
+                {(slide.mobileImageUrl || slide.desktopImageUrl) && (
+                  <img
+                    src={slide.mobileImageUrl || slide.desktopImageUrl!}
                     alt={slide.title}
-                    fill
-                    priority={idx === 0}
-                    className="object-cover object-center"
-                />
+                    className="absolute inset-0 w-full h-full object-cover object-center"
+                  />
+                )}
              </div>
           </div>
 
