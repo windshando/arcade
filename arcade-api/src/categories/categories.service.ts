@@ -46,6 +46,22 @@ export class CategoriesService {
   }
 
   async createCategory(dto: any) {
+    const translationsToCreate: any[] = [];
+    if (dto.nameEn) {
+      translationsToCreate.push({
+        locale: 'EN',
+        name: dto.nameEn,
+        description: dto.description || null,
+      });
+    }
+    if (dto.nameZh) {
+      translationsToCreate.push({
+        locale: 'ZH_CN',
+        name: dto.nameZh,
+        description: dto.description || null,
+      });
+    }
+
     return this.prisma.productCategory.create({
       data: {
         slug: dto.slug,
@@ -53,12 +69,8 @@ export class CategoriesService {
         sortOrder: dto.sortOrder || 0,
         isActive: dto.isActive !== false,
         coverMediaId: dto.coverMediaId || null,
-        translations: dto.nameEn ? {
-          create: {
-            locale: 'EN',
-            name: dto.nameEn,
-            description: dto.description || null,
-          }
+        translations: translationsToCreate.length > 0 ? {
+          create: translationsToCreate,
         } : undefined,
       },
       include: { translations: true },
@@ -66,6 +78,7 @@ export class CategoriesService {
   }
 
   async updateCategory(id: string, dto: any) {
+    // Handle EN translation
     if (dto.nameEn) {
       await this.prisma.productCategoryTranslation.upsert({
         where: { categoryId_locale: { categoryId: id, locale: 'EN' } },
@@ -77,6 +90,15 @@ export class CategoriesService {
       await this.prisma.productCategoryTranslation.updateMany({
         where: { categoryId: id, locale: 'EN' },
         data: { description: dto.description ?? null },
+      });
+    }
+
+    // Handle ZH_CN translation
+    if (dto.nameZh) {
+      await this.prisma.productCategoryTranslation.upsert({
+        where: { categoryId_locale: { categoryId: id, locale: 'ZH_CN' } },
+        update: { name: dto.nameZh },
+        create: { categoryId: id, locale: 'ZH_CN', name: dto.nameZh },
       });
     }
 

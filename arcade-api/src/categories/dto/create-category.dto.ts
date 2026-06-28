@@ -22,6 +22,10 @@ export class CreateCategoryDto {
 
   @IsOptional()
   @IsString()
+  nameZh?: string;
+
+  @IsOptional()
+  @IsString()
   description?: string;
 
   @IsOptional()

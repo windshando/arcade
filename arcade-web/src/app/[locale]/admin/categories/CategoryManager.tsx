@@ -35,7 +35,14 @@ export default function CategoryManager({ initialCategories }: { initialCategori
     handleActionWrapper(deleteCategory(id));
   };
 
+  const getTranslation = (cat: any, locale: string) => {
+    return cat?.translations?.find((t: any) => t.locale === locale);
+  };
+
   const CategoryForm = ({ parentId, existingCat = null }: { parentId?: string | null, existingCat?: any }) => {
+    const enTrans = getTranslation(existingCat, 'EN');
+    const zhTrans = getTranslation(existingCat, 'ZH_CN');
+
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
       const formData = new FormData(e.currentTarget);
@@ -48,23 +55,29 @@ export default function CategoryManager({ initialCategories }: { initialCategori
     };
 
     return (
-      <form onSubmit={handleSubmit} className="flex gap-2 items-center w-full mt-2 bg-black/5 p-2 rounded-lg border border-card-border">
+      <form onSubmit={handleSubmit} className="flex gap-2 items-center w-full mt-2 bg-black/5 p-2 rounded-lg border border-card-border flex-wrap">
         <input 
           name="slug" 
           defaultValue={existingCat?.slug || ''} 
           placeholder="Category Slug" 
           required 
-          className="bg-background border border-card-border px-3 py-1.5 rounded-md text-sm outline-none focus:ring-1 focus:ring-primary flex-1" 
+          className="bg-background border border-card-border px-3 py-1.5 rounded-md text-sm outline-none focus:ring-1 focus:ring-primary flex-1 min-w-[120px]" 
         />
         <input 
           name="nameEn" 
-          defaultValue={existingCat?.translations?.[0]?.name || ''} 
+          defaultValue={enTrans?.name || ''} 
           placeholder="English Name" 
-          className="bg-background border border-card-border px-3 py-1.5 rounded-md text-sm outline-none focus:ring-1 focus:ring-primary flex-1" 
+          className="bg-background border border-card-border px-3 py-1.5 rounded-md text-sm outline-none focus:ring-1 focus:ring-primary flex-1 min-w-[120px]" 
+        />
+        <input 
+          name="nameZh" 
+          defaultValue={zhTrans?.name || ''} 
+          placeholder="中文名称" 
+          className="bg-background border border-card-border px-3 py-1.5 rounded-md text-sm outline-none focus:ring-1 focus:ring-primary flex-1 min-w-[100px]" 
         />
         <input 
           name="description" 
-          defaultValue={existingCat?.translations?.[0]?.description || ''} 
+          defaultValue={enTrans?.description || ''} 
           placeholder="Category Description" 
           className="bg-background border border-card-border px-3 py-1.5 rounded-md text-sm outline-none focus:ring-1 focus:ring-primary flex-2 hidden xl:block" 
         />
@@ -105,8 +118,13 @@ export default function CategoryManager({ initialCategories }: { initialCategori
                   <FolderTree className="text-primary/60" size={18} />
                   <span className="font-semibold">{category.slug}</span>
                   <span className="text-sm opacity-50 px-2 bg-black/5 rounded-md">
-                    {category.translations?.[0]?.name || "No English Name"}
+                    {getTranslation(category, 'EN')?.name || "No English Name"}
                   </span>
+                  {getTranslation(category, 'ZH_CN')?.name && (
+                    <span className="text-sm opacity-50 px-2 bg-black/5 rounded-md">
+                      {getTranslation(category, 'ZH_CN').name}
+                    </span>
+                  )}
                 </div>
                 <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                   <button onClick={() => setAddingToParent(category.id)} className="p-1.5 hover:bg-black/10 rounded-md text-xs font-medium flex items-center gap-1" title="Add Subcategory">

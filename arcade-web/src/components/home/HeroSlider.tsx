@@ -35,7 +35,7 @@ export default function HeroSlider({ slides }: { slides: Slide[] }) {
 
   return (
     <section 
-      className="relative overflow-hidden bg-background"
+      className="relative overflow-hidden bg-neutral-900"
       style={{ width: '100vw', maxWidth: 'none', margin: '0', padding: '0', marginLeft: 'calc(-50vw + 50%)', height: '100svh', minHeight: '600px', maxHeight: '900px' }}
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}

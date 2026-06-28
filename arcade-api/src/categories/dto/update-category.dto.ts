@@ -23,6 +23,10 @@ export class UpdateCategoryDto {
 
   @IsOptional()
   @IsString()
+  nameZh?: string;
+
+  @IsOptional()
+  @IsString()
   description?: string;
 
   @IsOptional()

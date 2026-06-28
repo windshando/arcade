@@ -125,6 +125,7 @@ export async function createCategory(formData: FormData) {
   const payload = {
     slug: formData.get('slug'),
     nameEn: formData.get('nameEn') || undefined,
+    nameZh: formData.get('nameZh') || undefined,
     parentId: formData.get('parentId') || null,
     description: formData.get('description') || undefined,
     coverMediaId: formData.get('coverMediaId') || undefined,
@@ -149,6 +150,7 @@ export async function updateCategory(id: string, formData: FormData) {
   const payload = {
     slug: formData.get('slug'),
     nameEn: formData.get('nameEn') || undefined,
+    nameZh: formData.get('nameZh') || undefined,
     parentId: formData.get('parentId') || null,
     description: formData.get('description') || undefined,
     coverMediaId: formData.get('coverMediaId') || undefined,
