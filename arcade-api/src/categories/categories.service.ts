@@ -1,10 +1,18 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { PrismaService } from '../prisma/prisma.service';
 import { LocaleCode } from '@prisma/client';
 
 @Injectable()
 export class CategoriesService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly configService: ConfigService,
+  ) {}
+
+  private getMediaBaseUrl(): string {
+    return this.configService.get<string>('API_BASE_URL') || 'http://localhost:3001/api/v1';
+  }
 
   async getPublicCategories(locale: string = 'EN') {
     const formattedLocale = (locale || 'EN').replace('-', '_').toUpperCase() as LocaleCode;
@@ -23,13 +31,15 @@ export class CategoriesService {
       where: { id: { in: coverMediaIds } }
     }) : [];
 
+    const apiUrl = this.getMediaBaseUrl();
+
     return categories.map((cat) => {
       const translation = cat.translations[0];
       const media = mediaFiles.find(m => m.id === (cat as any).coverMediaId);
       return {
         id: cat.id,
         slug: cat.slug,
-        coverUrl: media ? `/api/v1/media/public/${media.storageKey}` : null,
+        coverUrl: media ? `${apiUrl}/media/public/${media.storageKey}` : null,
         name: translation?.name || cat.slug,
         description: translation?.description || '',
       };

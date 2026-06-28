@@ -48,7 +48,12 @@ export async function getPublicProductDetail(slug: string, locale: string) {
 }
 
 export async function getPublicCategories(locale: string) {
-  return fetchAPI(`/categories/public?locale=${locale}`, { next: { revalidate: 3600 } });
+  const categories = await fetchAPI(`/categories/public?locale=${locale}`, { next: { revalidate: 60 } });
+  if (!Array.isArray(categories)) return [];
+  return categories.map((cat: any) => ({
+    ...cat,
+    coverUrl: normalizeMediaUrl(cat.coverUrl),
+  }));
 }
 
 // Blog API Layer
@@ -99,7 +104,7 @@ export async function getPublicPromotion(slug: string) {
 }
 
 export async function getPublicSlides(locale: string) {
-  const slides = await fetchAPI(`/slides/public?locale=${locale}`, { next: { revalidate: 3600 } });
+  const slides = await fetchAPI(`/slides/public?locale=${locale}`, { next: { revalidate: 60 } });
   if (!Array.isArray(slides)) return [];
 
   // Normalize image URLs to use the frontend's known API base URL.

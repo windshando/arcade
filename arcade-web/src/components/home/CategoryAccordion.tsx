@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import Image from 'next/image';
 import { Link } from '@/i18n/routing';
 import { ArrowRight, Cpu, Anchor, Gamepad2 } from 'lucide-react';
 
@@ -67,11 +66,10 @@ export default function CategoryAccordion({ categories }: { categories: any[] })
                 <div className={`absolute inset-0 z-[1] transition-opacity duration-500 ${isHovered ? 'bg-black/30' : 'bg-black/10'}`} />
 
                 {category.coverUrl ? (
-                  <Image 
+                  <img 
                     src={category.coverUrl} 
                     alt={category.name} 
-                    fill 
-                    className={`object-cover transition-transform duration-1000 ${isHovered ? 'scale-110' : 'scale-100 grayscale-[50%]'}`} 
+                    className={`absolute inset-0 w-full h-full object-cover transition-transform duration-1000 ${isHovered ? 'scale-110' : 'scale-100 grayscale-[50%]'}`} 
                   />
                 ) : (
                   <div className={`absolute inset-0 bg-gradient-to-br ${gradientBg} transition-transform duration-1000 ${isHovered ? 'scale-110' : 'scale-100'}`}>
