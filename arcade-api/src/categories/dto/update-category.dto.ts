@@ -20,4 +20,12 @@ export class UpdateCategoryDto {
   @IsOptional()
   @IsString()
   nameEn?: string;
+
+  @IsOptional()
+  @IsString()
+  description?: string;
+
+  @IsOptional()
+  @IsString()
+  coverMediaId?: string;
 }

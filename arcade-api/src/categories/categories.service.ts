@@ -69,8 +69,14 @@ export class CategoriesService {
     if (dto.nameEn) {
       await this.prisma.productCategoryTranslation.upsert({
         where: { categoryId_locale: { categoryId: id, locale: 'EN' } },
-        update: { name: dto.nameEn, description: dto.description || null },
-        create: { categoryId: id, locale: 'EN', name: dto.nameEn, description: dto.description || null },
+        update: { name: dto.nameEn, description: dto.description ?? null },
+        create: { categoryId: id, locale: 'EN', name: dto.nameEn, description: dto.description ?? null },
+      });
+    } else if (dto.description !== undefined) {
+      // Update description even if nameEn is not provided, if the translation already exists
+      await this.prisma.productCategoryTranslation.updateMany({
+        where: { categoryId: id, locale: 'EN' },
+        data: { description: dto.description ?? null },
       });
     }
 
@@ -81,6 +87,7 @@ export class CategoriesService {
         parentId: dto.parentId === null ? null : dto.parentId,
         sortOrder: dto.sortOrder,
         isActive: dto.isActive,
+        coverMediaId: dto.coverMediaId !== undefined ? (dto.coverMediaId || null) : undefined,
       },
       include: { translations: true },
     });

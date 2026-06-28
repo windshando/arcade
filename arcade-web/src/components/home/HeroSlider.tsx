@@ -75,7 +75,6 @@ export default function HeroSlider({ slides }: { slides: Slide[] }) {
 
           {/* Tech Overlays */}
           <div className="absolute inset-0 bg-black/30 pointer-events-none" />
-          <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent pointer-events-none" />
 
           {/* Content Wrapper */}
           <div className={`relative h-full w-full px-6 md:px-16 lg:px-24 flex items-center ${
