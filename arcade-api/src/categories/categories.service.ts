@@ -51,6 +51,7 @@ export class CategoriesService {
       orderBy: { sortOrder: 'asc' },
       include: {
         translations: true,
+        coverMedia: true,
       },
     });
   }

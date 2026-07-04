@@ -1,9 +1,11 @@
 "use client";
 
-import { useState, useTransition } from 'react';
+import { useState, useTransition, useRef } from 'react';
 import { useRouter } from 'next/navigation';
-import { FolderTree, Settings, Plus, Trash2, Edit2 } from 'lucide-react';
-import { createCategory, updateCategory, deleteCategory } from '@/app/actions';
+import { FolderTree, Settings, Plus, Trash2, Edit2, ImagePlus, X, Loader2 } from 'lucide-react';
+import { createCategory, updateCategory, deleteCategory, uploadMediaFile } from '@/app/actions';
+
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api/v1';
 
 export default function CategoryManager({ initialCategories }: { initialCategories: any[] }) {
   const [isPending, startTransition] = useTransition();
@@ -42,10 +44,38 @@ export default function CategoryManager({ initialCategories }: { initialCategori
   const CategoryForm = ({ parentId, existingCat = null }: { parentId?: string | null, existingCat?: any }) => {
     const enTrans = getTranslation(existingCat, 'EN');
     const zhTrans = getTranslation(existingCat, 'ZH_CN');
+    const [coverMediaId, setCoverMediaId] = useState(existingCat?.coverMediaId || '');
+    const [coverPreview, setCoverPreview] = useState(existingCat?.coverMedia?.storageKey ? `${API_BASE_URL}/media/public/${existingCat.coverMedia.storageKey}` : '');
+    const [uploading, setUploading] = useState(false);
+    const fileInputRef = useRef<HTMLInputElement>(null);
+
+    const handleCoverUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+      if (!e.target.files?.length) return;
+      setUploading(true);
+      try {
+        const file = e.target.files[0];
+        const data = new FormData();
+        data.append('file', file);
+        const result = await uploadMediaFile(data);
+        setCoverMediaId(result.id);
+        setCoverPreview(`${API_BASE_URL}/media/public/${result.storageKey}`);
+      } catch (err: any) {
+        setErrorMsg(err.message || 'Cover image upload failed');
+      } finally {
+        setUploading(false);
+      }
+    };
+
+    const handleRemoveCover = () => {
+      setCoverMediaId('');
+      setCoverPreview('');
+      if (fileInputRef.current) fileInputRef.current.value = '';
+    };
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
       const formData = new FormData(e.currentTarget);
+      formData.set('coverMediaId', coverMediaId);
       if (existingCat) {
         handleActionWrapper(updateCategory(existingCat.id, formData));
       } else {
@@ -81,13 +111,45 @@ export default function CategoryManager({ initialCategories }: { initialCategori
           placeholder="Category Description" 
           className="bg-background border border-card-border px-3 py-1.5 rounded-md text-sm outline-none focus:ring-1 focus:ring-primary flex-2 hidden xl:block" 
         />
-        <input 
-          name="coverMediaId" 
-          defaultValue={existingCat?.coverMediaId || ''} 
-          placeholder="Cover Media ID (Optional)" 
-          className="bg-background border border-card-border px-3 py-1.5 rounded-md text-sm outline-none focus:ring-1 focus:ring-primary flex-1 hidden md:block" 
-        />
-        <button type="submit" disabled={isPending} className="bg-primary hover:bg-primary/90 text-white px-4 py-1.5 rounded-md text-sm font-medium transition-colors disabled:opacity-50">
+
+        {/* Cover Image Upload */}
+        <div className="flex items-center gap-1.5">
+          {coverPreview ? (
+            <div className="relative group">
+              <img 
+                src={coverPreview} 
+                alt="Cover" 
+                className="w-8 h-8 rounded object-cover border border-card-border" 
+                onError={() => setCoverPreview('')}
+              />
+              <button
+                type="button"
+                onClick={handleRemoveCover}
+                className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+              >
+                <X size={10} />
+              </button>
+            </div>
+          ) : (
+            <label className={`flex items-center gap-1 px-2.5 py-1.5 rounded-md text-xs font-medium cursor-pointer transition-colors border border-dashed border-card-border hover:border-primary hover:bg-primary/5 ${uploading ? 'opacity-50 pointer-events-none' : ''}`}>
+              {uploading ? (
+                <><Loader2 size={14} className="animate-spin" /> Uploading...</>
+              ) : (
+                <><ImagePlus size={14} /> Cover</>
+              )}
+              <input
+                ref={fileInputRef}
+                type="file"
+                className="hidden"
+                accept="image/*"
+                onChange={handleCoverUpload}
+              />
+            </label>
+          )}
+        </div>
+
+        <input type="hidden" name="coverMediaId" value={coverMediaId} />
+        <button type="submit" disabled={isPending || uploading} className="bg-primary hover:bg-primary/90 text-white px-4 py-1.5 rounded-md text-sm font-medium transition-colors disabled:opacity-50">
           Save
         </button>
         <button 
@@ -116,6 +178,13 @@ export default function CategoryManager({ initialCategories }: { initialCategori
               <div className="flex items-center justify-between group py-2 px-3 hover:bg-primary/5 rounded-lg transition-colors border border-transparent hover:border-card-border">
                 <div className="flex items-center gap-3">
                   <FolderTree className="text-primary/60" size={18} />
+                  {category.coverMedia?.storageKey && (
+                    <img 
+                      src={`${API_BASE_URL}/media/public/${category.coverMedia.storageKey}`} 
+                      alt="" 
+                      className="w-7 h-7 rounded object-cover border border-card-border" 
+                    />
+                  )}
                   <span className="font-semibold">{category.slug}</span>
                   <span className="text-sm opacity-50 px-2 bg-black/5 rounded-md">
                     {getTranslation(category, 'EN')?.name || "No English Name"}
