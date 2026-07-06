@@ -1,15 +1,30 @@
-import { fetchAdminAPI } from '@/lib/adminApi';
 import NewProductForm from './NewProductForm';
+import { cookies } from 'next/headers';
 import { Link } from '@/i18n/routing';
 
 export const revalidate = 0;
 
 export default async function NewProductPage() {
   let categories: any[] = [];
+
   try {
-    categories = await fetchAdminAPI('/categories/admin');
+    const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api/v1';
+    const cookieStore = await cookies();
+    const token = cookieStore.get('admin_token')?.value;
+
+    const response = await fetch(`${API_BASE_URL}/categories/admin`, {
+      cache: 'no-store',
+      headers: {
+        'Content-Type': 'application/json',
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      },
+    });
+
+    if (response.ok) {
+      categories = await response.json();
+    }
   } catch (e) {
-    console.error('Failed to fetch categories:', e);
+    // Silently fail — page renders with empty categories
   }
 
   return (
