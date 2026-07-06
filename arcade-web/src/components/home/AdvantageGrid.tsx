@@ -1,7 +1,15 @@
-import { Star, Shield, Zap, Wrench, Globe, Truck, Cpu, Rocket, Clock, Heart, ThumbsUp, Trophy, Headset, Banknote, ShieldCheck } from 'lucide-react';
+import {
+  Star, Shield, Zap, Wrench, Globe, Truck, Cpu, Rocket, Clock, Heart,
+  ThumbsUp, Trophy, Headset, Banknote, ShieldCheck,
+  Settings, Activity, Anchor, Award, BatteryCharging, Crosshair,
+  Fingerprint, Gamepad2, Ghost, Microscope, Radio, Server,
+} from 'lucide-react';
 
 const iconMap: Record<string, any> = {
-  Star, Shield, Zap, Wrench, Globe, Truck, Cpu, Rocket, Clock, Heart, ThumbsUp, Trophy, Headset, Banknote, ShieldCheck
+  Star, Shield, Zap, Wrench, Globe, Truck, Cpu, Rocket, Clock, Heart,
+  ThumbsUp, Trophy, Headset, Banknote, ShieldCheck,
+  Settings, Activity, Anchor, Award, BatteryCharging, Crosshair,
+  Fingerprint, Gamepad2, Ghost, Microscope, Radio, Server,
 };
 
 export default function AdvantageGrid({ advantages }: { advantages: any[] }) {

@@ -160,7 +160,7 @@ export class ProductsService {
           slug: dto.slug,
           sku: dto.sku,
           categoryId: dto.categoryId,
-          status: 'DRAFT',
+          status: (dto.status as any) || 'DRAFT',
           isFeatured: dto.isFeatured || false,
           voltage: dto.voltage,
           dimensions: dto.dimensions,

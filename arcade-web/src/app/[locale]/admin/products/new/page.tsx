@@ -5,7 +5,12 @@ import { Link } from '@/i18n/routing';
 export const revalidate = 0;
 
 export default async function NewProductPage() {
-  const categories = await fetchAdminAPI('/categories/admin');
+  let categories = [];
+  try {
+    categories = await fetchAdminAPI('/categories/admin');
+  } catch (e) {
+    console.error('Failed to fetch categories:', e);
+  }
 
   return (
     <div className="p-6 md:p-8 w-full max-w-[1600px] mx-auto animate-fade-in space-y-6">

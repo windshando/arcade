@@ -26,6 +26,10 @@ export class CreateProductDto {
   sku?: string;
 
   @IsString()
+  @IsOptional()
+  status?: string;
+
+  @IsString()
   categoryId!: string;
 
   @IsString()
