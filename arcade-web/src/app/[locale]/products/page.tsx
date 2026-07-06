@@ -4,6 +4,7 @@ import ProductActions from '@/components/products/ProductActions';
 import StickyCompareBar from '@/components/products/StickyCompareBar';
 import { Metadata } from 'next';
 import Image from 'next/image';
+import { stripHtml } from '@/lib/stripHtml';
 
 export const revalidate = 60; // 1 minute
 
@@ -101,7 +102,7 @@ export default async function ProductsPage({
                       </div>
                     </div>
                     <p className="text-sm opacity-70 flex-1 line-clamp-3">
-                      {product.shortDescription}
+                      {stripHtml(product.shortDescription)}
                     </p>
                   </div>
                 </div>

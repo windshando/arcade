@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import { Link } from '@/i18n/routing';
 import { ChevronRight } from 'lucide-react';
+import { stripHtml } from '@/lib/stripHtml';
 import ProductActions from '@/components/products/ProductActions';
 
 export default function FeaturedProducts({ products }: { products: any[] }) {
@@ -83,7 +84,7 @@ export default function FeaturedProducts({ products }: { products: any[] }) {
                     {product.name}
                   </h3>
                   <p className="text-sm text-text-secondary line-clamp-2 flex-1">
-                    {product.shortDescription || 'Experience industry-leading ROI with our state-of-the-art gaming hardware.'}
+                    {stripHtml(product.shortDescription) || 'Experience industry-leading ROI with our state-of-the-art gaming hardware.'}
                   </p>
                   <div className="mt-4 pt-4 border-t border-card-border/50 flex items-center justify-between text-sm font-bold text-primary">
                     <span>View Details</span>
