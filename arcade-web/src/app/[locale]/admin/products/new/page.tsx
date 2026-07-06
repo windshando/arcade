@@ -1,11 +1,11 @@
 import { fetchAdminAPI } from '@/lib/adminApi';
-import ProductForm from '../ProductForm';
+import NewProductForm from './NewProductForm';
 import { Link } from '@/i18n/routing';
 
 export const revalidate = 0;
 
 export default async function NewProductPage() {
-  let categories = [];
+  let categories: any[] = [];
   try {
     categories = await fetchAdminAPI('/categories/admin');
   } catch (e) {
@@ -27,7 +27,7 @@ export default async function NewProductPage() {
       </div>
 
       <div className="bg-card-bg/30 border border-card-border p-8 rounded-2xl shadow-sm">
-        <ProductForm categories={categories} />
+        <NewProductForm categories={categories} />
       </div>
     </div>
   );
