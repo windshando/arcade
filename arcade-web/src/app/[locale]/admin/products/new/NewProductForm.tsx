@@ -81,12 +81,17 @@ export default function NewProductForm({ categories }: { categories: any[] }) {
         warrantyMonths: formData.warrantyMonths ? parseInt(formData.warrantyMonths) : undefined,
       };
 
-      await createProduct(payload);
+      const result = await createProduct(payload);
       
+      if (result?.error) {
+        setError(result.error);
+        setIsSubmitting(false);
+        return;
+      }
+
       router.push('/admin/products');
     } catch (err: any) {
       setError(err.message || 'Failed to create product');
-    } finally {
       setIsSubmitting(false);
     }
   };

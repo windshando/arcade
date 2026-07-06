@@ -185,7 +185,7 @@ export async function deleteCategory(id: string) {
 export async function createProduct(payload: any) {
   const cookieStore = await cookies();
   const token = cookieStore.get('admin_token')?.value;
-  if (!token) throw new Error('Unauthorized');
+  if (!token) return { error: 'Unauthorized' };
 
   const res = await fetch(`${API_BASE_URL}/products/admin`, {
     method: 'POST',
@@ -194,10 +194,11 @@ export async function createProduct(payload: any) {
   });
   if (!res.ok) {
     const data = await res.json().catch(() => ({}));
-    throw new Error(data.message || 'Failed to create product');
+    return { error: data.message || 'Failed to create product' };
   }
   
   revalidatePath('/admin/products');
+  return { success: true };
 }
 
 export async function updateProduct(id: string, payload: any) {
